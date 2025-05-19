@@ -26,6 +26,7 @@ interface FurnitureState {
 const SAMPLE_ITEMS: FurnitureItem[] = [
   {
     id: "sofa",
+    code: "SOF-001",
     name: "Sofá",
     width: 2.5,
     height: 1,
@@ -35,6 +36,7 @@ const SAMPLE_ITEMS: FurnitureItem[] = [
   },
   {
     id: "table",
+    code: "MES-001",
     name: "Mesa de Jantar",
     width: 2,
     height: 0.8,
@@ -44,6 +46,7 @@ const SAMPLE_ITEMS: FurnitureItem[] = [
   },
   {
     id: "chair",
+    code: "CAD-001",
     name: "Cadeira",
     width: 0.6,
     height: 0.9,
@@ -53,6 +56,7 @@ const SAMPLE_ITEMS: FurnitureItem[] = [
   },
   {
     id: "bed",
+    code: "CAM-001",
     name: "Estrutura de Cama",
     width: 2,
     height: 0.4,

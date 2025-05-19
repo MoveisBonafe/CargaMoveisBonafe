@@ -12,6 +12,7 @@ export enum Controls {
 // Basic furniture item
 export interface FurnitureItem {
   id: string;
+  code: string;  // Código do produto para importação/exportação
   name: string;
   width: number;
   height: number;

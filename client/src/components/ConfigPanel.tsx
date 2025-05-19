@@ -25,6 +25,7 @@ const ConfigPanel = () => {
   const { truckDimensions, setTruckDimensions } = useTruckStore();
   
   const [newItem, setNewItem] = useState<Omit<FurnitureItem, "id">>({
+    code: "",
     name: "",
     width: 1,
     height: 1,
@@ -40,17 +41,58 @@ const ConfigPanel = () => {
   const [newRuleItem2, setNewRuleItem2] = useState("");
   
   const handleAddItem = () => {
-    if (!newItem.name.trim()) {
-      alert("Por favor, digite um nome para o item");
+    if (!newItem.name.trim() || !newItem.code.trim()) {
+      alert("Por favor, digite um código e um nome para o item");
       return;
     }
     
-    addItem({
-      ...newItem,
-      id: Date.now().toString() // Simple unique ID
-    });
+    if (isEditing && editingItemId) {
+      // Estamos editando um item existente
+      updateItem(editingItemId, newItem);
+      setIsEditing(false);
+      setEditingItemId(null);
+    } else {
+      // Estamos adicionando um novo item
+      addItem({
+        ...newItem,
+        id: Date.now().toString() // Simple unique ID
+      });
+    }
     
+    // Resetar o formulário
     setNewItem({
+      code: "",
+      name: "",
+      width: 1,
+      height: 1,
+      depth: 1,
+      weight: 10,
+      color: getRandomColor()
+    });
+  };
+  
+  const handleStartEdit = (itemId: string) => {
+    const itemToEdit = items.find(item => item.id === itemId);
+    if (itemToEdit) {
+      setNewItem({
+        code: itemToEdit.code,
+        name: itemToEdit.name,
+        width: itemToEdit.width,
+        height: itemToEdit.height,
+        depth: itemToEdit.depth,
+        weight: itemToEdit.weight,
+        color: itemToEdit.color
+      });
+      setEditingItemId(itemId);
+      setIsEditing(true);
+    }
+  };
+  
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingItemId(null);
+    setNewItem({
+      code: "",
       name: "",
       width: 1,
       height: 1,
@@ -202,6 +244,16 @@ const ConfigPanel = () => {
             <h3 className="text-lg font-medium mb-2">Adicionar Novo Item</h3>
             <div className="space-y-2">
               <div>
+                <Label htmlFor="itemCode">Código do Produto</Label>
+                <Input
+                  id="itemCode"
+                  value={newItem.code}
+                  onChange={(e) => setNewItem({ ...newItem, code: e.target.value })}
+                  placeholder="ex: SOF-001, MES-001"
+                />
+              </div>
+              
+              <div>
                 <Label htmlFor="itemName">Nome</Label>
                 <Input
                   id="itemName"
@@ -288,9 +340,20 @@ const ConfigPanel = () => {
                 </div>
               </div>
               
-              <Button onClick={handleAddItem} className="w-full">
-                Adicionar Item
-              </Button>
+              {isEditing ? (
+                <div className="flex gap-2">
+                  <Button onClick={handleAddItem} className="flex-grow" variant="default">
+                    Salvar Alterações
+                  </Button>
+                  <Button onClick={handleCancelEdit} variant="outline">
+                    Cancelar
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={handleAddItem} className="w-full">
+                  Adicionar Item
+                </Button>
+              )}
             </div>
           </div>
           
