@@ -91,6 +91,18 @@ export const useFurnitureStore = create<FurnitureState>((set, get) => ({
     }));
   },
   
+  updateItem: (id: string, updatedItem: Partial<FurnitureItem>) => {
+    set((state) => ({
+      items: state.items.map(item => 
+        item.id === id ? { ...item, ...updatedItem } : item
+      ),
+      // Também atualize os itens colocados se houver algum
+      placedItems: state.placedItems.map(item => 
+        item.id === id ? { ...item, ...updatedItem, position: item.position, rotation: item.rotation } : item
+      ),
+    }));
+  },
+  
   resetItems: () => {
     set({
       items: SAMPLE_ITEMS,
