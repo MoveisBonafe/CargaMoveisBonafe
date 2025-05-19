@@ -84,19 +84,19 @@ const ConfigPanel = () => {
     <div className="p-4">
       <Tabs defaultValue="truck">
         <TabsList className="grid grid-cols-3 mb-4">
-          <TabsTrigger value="truck">Truck</TabsTrigger>
-          <TabsTrigger value="items">Items</TabsTrigger>
-          <TabsTrigger value="rules">Stacking Rules</TabsTrigger>
+          <TabsTrigger value="truck">Caminhão</TabsTrigger>
+          <TabsTrigger value="items">Itens</TabsTrigger>
+          <TabsTrigger value="rules">Regras de Empilhamento</TabsTrigger>
         </TabsList>
         
         {/* Truck Configuration */}
         <TabsContent value="truck">
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-medium mb-2">Truck Dimensions</h3>
+              <h3 className="text-lg font-medium mb-2">Dimensões do Caminhão</h3>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <Label htmlFor="truckWidth">Width</Label>
+                  <Label htmlFor="truckWidth">Largura</Label>
                   <Input
                     id="truckWidth"
                     type="number"
@@ -110,7 +110,7 @@ const ConfigPanel = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="truckHeight">Height</Label>
+                  <Label htmlFor="truckHeight">Altura</Label>
                   <Input
                     id="truckHeight"
                     type="number"
@@ -124,7 +124,7 @@ const ConfigPanel = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="truckDepth">Depth</Label>
+                  <Label htmlFor="truckDepth">Profundidade</Label>
                   <Input
                     id="truckDepth"
                     type="number"
@@ -141,19 +141,19 @@ const ConfigPanel = () => {
             </div>
             
             <div>
-              <h3 className="text-lg font-medium mb-2">Controls Help</h3>
+              <h3 className="text-lg font-medium mb-2">Ajuda de Controles</h3>
               <div className="bg-secondary/50 p-3 rounded-md">
-                <p className="text-sm mb-2">Camera Controls:</p>
+                <p className="text-sm mb-2">Controles de Câmera:</p>
                 <ul className="text-xs space-y-1">
-                  <li>W/↑: Move camera forward</li>
-                  <li>S/↓: Move camera backward</li>
-                  <li>A/←: Move camera left</li>
-                  <li>D/→: Move camera right</li>
-                  <li>E: Move camera up</li>
-                  <li>Q: Move camera down</li>
-                  <li>R: Reset camera</li>
-                  <li>Mouse: Click and drag to rotate view</li>
-                  <li>Mouse wheel: Zoom in/out</li>
+                  <li>W/↑: Mover câmera para frente</li>
+                  <li>S/↓: Mover câmera para trás</li>
+                  <li>A/←: Mover câmera para esquerda</li>
+                  <li>D/→: Mover câmera para direita</li>
+                  <li>E: Mover câmera para cima</li>
+                  <li>Q: Mover câmera para baixo</li>
+                  <li>R: Reiniciar câmera</li>
+                  <li>Mouse: Clique e arraste para rotacionar visão</li>
+                  <li>Roda do mouse: Aproximar/afastar</li>
                 </ul>
               </div>
             </div>
@@ -163,21 +163,21 @@ const ConfigPanel = () => {
         {/* Items Configuration */}
         <TabsContent value="items" className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium mb-2">Add New Item</h3>
+            <h3 className="text-lg font-medium mb-2">Adicionar Novo Item</h3>
             <div className="space-y-2">
               <div>
-                <Label htmlFor="itemName">Name</Label>
+                <Label htmlFor="itemName">Nome</Label>
                 <Input
                   id="itemName"
                   value={newItem.name}
                   onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                  placeholder="e.g. Sofa, Table, Chair"
+                  placeholder="ex: Sofá, Mesa, Cadeira"
                 />
               </div>
               
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <Label htmlFor="itemWidth">Width</Label>
+                  <Label htmlFor="itemWidth">Largura</Label>
                   <Input
                     id="itemWidth"
                     type="number"
@@ -191,7 +191,7 @@ const ConfigPanel = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="itemHeight">Height</Label>
+                  <Label htmlFor="itemHeight">Altura</Label>
                   <Input
                     id="itemHeight"
                     type="number"
@@ -205,7 +205,7 @@ const ConfigPanel = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="itemDepth">Depth</Label>
+                  <Label htmlFor="itemDepth">Profundidade</Label>
                   <Input
                     id="itemDepth"
                     type="number"
@@ -221,7 +221,7 @@ const ConfigPanel = () => {
               </div>
               
               <div>
-                <Label htmlFor="itemColor">Color</Label>
+                <Label htmlFor="itemColor">Cor</Label>
                 <div className="flex gap-2">
                   <Input
                     id="itemColor"
@@ -239,17 +239,17 @@ const ConfigPanel = () => {
               </div>
               
               <Button onClick={handleAddItem} className="w-full">
-                Add Item
+                Adicionar Item
               </Button>
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium mb-2">Available Items</h3>
+            <h3 className="text-lg font-medium mb-2">Itens Disponíveis</h3>
             {items.length === 0 ? (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>No items added yet. Add some items above.</AlertDescription>
+                <AlertDescription>Nenhum item adicionado ainda. Adicione alguns itens acima.</AlertDescription>
               </Alert>
             ) : (
               <ScrollArea className="h-[300px]">
@@ -268,9 +268,9 @@ const ConfigPanel = () => {
                       <AccordionContent>
                         <div className="p-2 space-y-2">
                           <div className="grid grid-cols-3 gap-2 text-sm">
-                            <div>Width: {item.width}</div>
-                            <div>Height: {item.height}</div>
-                            <div>Depth: {item.depth}</div>
+                            <div>Largura: {item.width}</div>
+                            <div>Altura: {item.height}</div>
+                            <div>Profundidade: {item.depth}</div>
                           </div>
                           <Button 
                             variant="destructive" 
@@ -278,7 +278,7 @@ const ConfigPanel = () => {
                             onClick={() => removeItem(item.id)}
                             className="w-full"
                           >
-                            Remove
+                            Remover
                           </Button>
                         </div>
                       </AccordionContent>
@@ -293,20 +293,20 @@ const ConfigPanel = () => {
         {/* Stacking Rules Configuration */}
         <TabsContent value="rules" className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium mb-2">Add Stacking Rule</h3>
+            <h3 className="text-lg font-medium mb-2">Adicionar Regra de Empilhamento</h3>
             <p className="text-sm text-muted-foreground mb-2">
-              Define which items can be stacked on top of each other.
+              Defina quais itens podem ser empilhados uns sobre os outros.
             </p>
             <div className="space-y-2">
               <div>
-                <Label htmlFor="bottomItem">Bottom Item</Label>
+                <Label htmlFor="bottomItem">Item de Baixo</Label>
                 <select
                   id="bottomItem"
                   className="w-full p-2 rounded-md bg-secondary text-foreground border border-border"
                   value={newRuleItem1}
                   onChange={(e) => setNewRuleItem1(e.target.value)}
                 >
-                  <option value="">Select an item...</option>
+                  <option value="">Selecione um item...</option>
                   {items.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -316,14 +316,14 @@ const ConfigPanel = () => {
               </div>
               
               <div>
-                <Label htmlFor="topItem">Top Item</Label>
+                <Label htmlFor="topItem">Item de Cima</Label>
                 <select
                   id="topItem"
                   className="w-full p-2 rounded-md bg-secondary text-foreground border border-border"
                   value={newRuleItem2}
                   onChange={(e) => setNewRuleItem2(e.target.value)}
                 >
-                  <option value="">Select an item...</option>
+                  <option value="">Selecione um item...</option>
                   {items.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -337,18 +337,18 @@ const ConfigPanel = () => {
                 className="w-full"
                 disabled={items.length < 2}
               >
-                Add Stacking Rule
+                Adicionar Regra
               </Button>
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium mb-2">Current Stacking Rules</h3>
+            <h3 className="text-lg font-medium mb-2">Regras de Empilhamento Atuais</h3>
             {getStackingRules().length === 0 ? (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  No stacking rules defined yet. By default, items cannot be stacked on each other.
+                  Nenhuma regra de empilhamento definida ainda. Por padrão, os itens não podem ser empilhados uns sobre os outros.
                 </AlertDescription>
               </Alert>
             ) : (
@@ -371,7 +371,7 @@ const ConfigPanel = () => {
                             style={{ backgroundColor: item1.color }}
                           />
                           <span className="text-sm">{item1.name}</span>
-                          <span className="text-xs text-muted-foreground">can support</span>
+                          <span className="text-xs text-muted-foreground">pode suportar</span>
                           <div 
                             className="w-3 h-3 rounded-full" 
                             style={{ backgroundColor: item2.color }}

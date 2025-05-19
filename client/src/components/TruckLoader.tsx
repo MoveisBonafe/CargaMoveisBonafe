@@ -26,19 +26,19 @@ const TruckLoader = () => {
       {/* Sidebar panel */}
       <div className="w-96 bg-card border-l border-border h-full flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h1 className="text-2xl font-bold">Truck Loader</h1>
+          <h1 className="text-2xl font-bold">Carregador de Caminhão</h1>
           <div className="flex items-center gap-2">
             <Button 
               variant={activePanel === "config" ? "default" : "outline"} 
               onClick={() => setActivePanel("config")}
             >
-              Configure
+              Configurar
             </Button>
             <Button 
               variant={activePanel === "export" ? "default" : "outline"} 
               onClick={() => setActivePanel("export")}
             >
-              Export
+              Exportar
             </Button>
           </div>
         </div>
@@ -56,14 +56,14 @@ const TruckLoader = () => {
             variant="destructive" 
             onClick={handleReset}
           >
-            Reset Truck
+            Reiniciar Caminhão
           </Button>
           
           <Button onClick={() => {
             const { toggleMute } = useAudio.getState();
             toggleMute();
           }}>
-            Toggle Sound
+            Alternar Som
           </Button>
         </div>
       </div>

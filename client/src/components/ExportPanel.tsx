@@ -84,38 +84,38 @@ const ExportPanel = () => {
   
   return (
     <div className="p-4 space-y-4">
-      <h2 className="text-xl font-bold">Export Loading Plan</h2>
+      <h2 className="text-xl font-bold">Exportar Plano de Carregamento</h2>
       
       {placedItems.length === 0 ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            No items have been placed in the truck yet. Add some items to generate an export.
+            Nenhum item foi colocado no caminhão ainda. Adicione alguns itens para gerar uma exportação.
           </AlertDescription>
         </Alert>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="bg-secondary/30 p-3 rounded-md">
-              <h3 className="font-medium mb-1">Truck Volume</h3>
+              <h3 className="font-medium mb-1">Volume do Caminhão</h3>
               <p className="text-sm text-muted-foreground">
-                {stats.truckVolume.toFixed(2)} cubic units
+                {stats.truckVolume.toFixed(2)} unidades cúbicas
               </p>
             </div>
             <div className="bg-secondary/30 p-3 rounded-md">
-              <h3 className="font-medium mb-1">Used Volume</h3>
+              <h3 className="font-medium mb-1">Volume Utilizado</h3>
               <p className="text-sm text-muted-foreground">
-                {stats.usedVolume.toFixed(2)} cubic units ({stats.usagePercentage.toFixed(1)}%)
+                {stats.usedVolume.toFixed(2)} unidades cúbicas ({stats.usagePercentage.toFixed(1)}%)
               </p>
             </div>
             <div className="bg-secondary/30 p-3 rounded-md">
-              <h3 className="font-medium mb-1">Items Placed</h3>
+              <h3 className="font-medium mb-1">Itens Colocados</h3>
               <p className="text-sm text-muted-foreground">
-                {stats.itemCount} of {stats.totalItems} available
+                {stats.itemCount} de {stats.totalItems} disponíveis
               </p>
             </div>
             <div className="bg-secondary/30 p-3 rounded-md">
-              <h3 className="font-medium mb-1">Generated On</h3>
+              <h3 className="font-medium mb-1">Gerado Em</h3>
               <p className="text-sm text-muted-foreground">
                 {new Date().toLocaleString()}
               </p>
@@ -124,7 +124,7 @@ const ExportPanel = () => {
           
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <h3 className="font-medium">Loading Plan Data</h3>
+              <h3 className="font-medium">Dados do Plano de Carregamento</h3>
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
@@ -135,12 +135,12 @@ const ExportPanel = () => {
                   {copied ? (
                     <>
                       <Check className="h-4 w-4" />
-                      <span>Copied</span>
+                      <span>Copiado</span>
                     </>
                   ) : (
                     <>
                       <Clipboard className="h-4 w-4" />
-                      <span>Copy</span>
+                      <span>Copiar</span>
                     </>
                   )}
                 </Button>
@@ -150,7 +150,7 @@ const ExportPanel = () => {
                   className="flex items-center gap-1"
                 >
                   <Download className="h-4 w-4" />
-                  <span>Download</span>
+                  <span>Baixar</span>
                 </Button>
               </div>
             </div>
@@ -162,7 +162,7 @@ const ExportPanel = () => {
             />
             
             <p className="text-xs text-muted-foreground">
-              This data can be imported later to restore your loading plan or shared with colleagues.
+              Esses dados podem ser importados posteriormente para restaurar seu plano de carregamento ou compartilhados com colegas.
             </p>
           </div>
         </>

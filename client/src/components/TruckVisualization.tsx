@@ -130,6 +130,20 @@ const TruckVisualization = () => {
     const truckHalfWidth = truckDimensions.width / 2;
     const truckHalfDepth = truckDimensions.depth / 2;
     
+    // Verificar se o item está completamente dentro dos limites do caminhão
+    if (
+      position.x - halfWidth < -truckHalfWidth ||
+      position.x + halfWidth > truckHalfWidth ||
+      position.z - halfDepth < -truckHalfDepth ||
+      position.z + halfDepth > truckHalfDepth
+    ) {
+      // O item está fora dos limites do caminhão, não permitir a colocação
+      playHit(); // Tocar som de erro
+      return; // Sair da função sem colocar o item
+    }
+    
+    // Se chegou até aqui, o item está dentro dos limites
+    // Garantir que o item fique totalmente dentro do caminhão
     let x = Math.min(Math.max(position.x, -truckHalfWidth + halfWidth), truckHalfWidth - halfWidth);
     let z = Math.min(Math.max(position.z, -truckHalfDepth + halfDepth), truckHalfDepth - halfDepth);
     

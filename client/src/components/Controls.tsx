@@ -43,7 +43,7 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
         )}
       >
         <div className="flex items-center justify-between p-2 border-b border-border">
-          <h3 className={cn("font-medium", !isExpanded && "hidden")}>Available Items</h3>
+          <h3 className={cn("font-medium", !isExpanded && "hidden")}>Itens Disponíveis</h3>
           <button
             className="p-1 rounded-md hover:bg-secondary/50"
             onClick={() => setIsExpanded(!isExpanded)}
@@ -56,7 +56,7 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
           <>
             <div className="p-3 border-b border-border">
               <div className="mb-1 flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Truck Volume Usage</span>
+                <span className="text-xs text-muted-foreground">Uso do Volume do Caminhão</span>
                 <span className="text-xs font-medium">
                   {volumeStats.percentage.toFixed(1)}%
                 </span>
@@ -68,14 +68,14 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
                 />
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} cubic units
+                {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} unidades cúbicas
               </div>
             </div>
             
             <div className="p-2 max-h-[400px] overflow-y-auto custom-scrollbar">
               {items.length === 0 ? (
                 <div className="text-sm text-muted-foreground p-2 text-center">
-                  No items available. Add some in the configuration panel.
+                  Nenhum item disponível. Adicione alguns no painel de configuração.
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -103,20 +103,20 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
                         </div>
                         <div className="grid grid-cols-3 gap-1 mt-1">
                           <div className="text-xs text-muted-foreground">
-                            W: {item.width}
+                            L: {item.width}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            H: {item.height}
+                            A: {item.height}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            D: {item.depth}
+                            P: {item.depth}
                           </div>
                         </div>
                         <div className="mt-1 text-xs">
                           {isPlaced ? (
-                            <span className="text-muted-foreground">Placed (click to move)</span>
+                            <span className="text-muted-foreground">Colocado (clique para mover)</span>
                           ) : (
-                            <span className="text-primary">Available</span>
+                            <span className="text-primary">Disponível</span>
                           )}
                         </div>
                       </div>
