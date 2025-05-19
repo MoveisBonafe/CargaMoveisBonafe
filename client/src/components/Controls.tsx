@@ -63,11 +63,10 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   
   // Funções para controle de arrasto do painel
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsDragging(true);
-      dragStartPos.current = { x: e.clientX, y: e.clientY };
-      e.preventDefault();
-    }
+    setIsDragging(true);
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+    e.stopPropagation();
+    e.preventDefault();
   };
   
   // Inicializa as quantidades se necessário
@@ -236,7 +235,35 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
                           {isPlaced ? (
                             <span className="text-muted-foreground">Colocado (clique para mover)</span>
                           ) : (
-                            <span className="text-primary">Disponível</span>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-primary">Disponível</span>
+                              <div className="flex gap-1 items-center mt-1">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="10"
+                                  className="w-12 h-6 text-xs p-1 border border-border rounded bg-background"
+                                  value={itemQuantities[item.id] || 1}
+                                  onChange={(e) => {
+                                    const val = parseInt(e.target.value) || 1;
+                                    setItemQuantities(prev => ({
+                                      ...prev,
+                                      [item.id]: Math.max(1, Math.min(10, val))
+                                    }));
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <button
+                                  className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded flex-grow"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddMultipleItems(item.id);
+                                  }}
+                                >
+                                  Adicionar {itemQuantities[item.id] || 1}x
+                                </button>
+                              </div>
+                            </div>
                           )}
                         </div>
                       </div>
