@@ -18,6 +18,7 @@ const ConfigPanel = () => {
     items, 
     addItem, 
     removeItem, 
+    updateItem,
     addStackingRule, 
     removeStackingRule, 
     getStackingRules 
@@ -40,6 +41,10 @@ const ConfigPanel = () => {
   const [newRuleItem1, setNewRuleItem1] = useState("");
   const [newRuleItem2, setNewRuleItem2] = useState("");
   
+  // Estado para importação por código
+  const [importCode, setImportCode] = useState("");
+  const [importCodes, setImportCodes] = useState<string[]>([]);
+  
   const handleAddItem = () => {
     if (!newItem.name.trim() || !newItem.code.trim()) {
       alert("Por favor, digite um código e um nome para o item");
@@ -48,6 +53,7 @@ const ConfigPanel = () => {
     
     if (isEditing && editingItemId) {
       // Estamos editando um item existente
+      console.log("Atualizando item:", editingItemId, newItem);
       updateItem(editingItemId, newItem);
       setIsEditing(false);
       setEditingItemId(null);
@@ -127,13 +133,52 @@ const ConfigPanel = () => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
   
+  // Manipular adição de código para importação
+  const handleAddImportCode = () => {
+    if (!importCode) return;
+    
+    // Verificar se o código já está na lista
+    if (importCodes.includes(importCode)) {
+      alert("Esse código já está na lista de importação.");
+      return;
+    }
+    
+    // Verificar se o código existe na base de itens
+    const itemExists = useFurnitureStore.getState().findItemByCode(importCode);
+    if (!itemExists) {
+      alert("Não foi encontrado nenhum item com este código.");
+      return;
+    }
+    
+    setImportCodes([...importCodes, importCode]);
+    setImportCode("");
+  };
+  
+  // Importar itens pelos códigos
+  const handleImportItems = () => {
+    if (importCodes.length === 0) {
+      alert("Adicione pelo menos um código para importar.");
+      return;
+    }
+    
+    const importedItems = useFurnitureStore.getState().importItemsByCode(importCodes);
+    if (importedItems.length === 0) {
+      alert("Nenhum item encontrado com os códigos fornecidos.");
+      return;
+    }
+    
+    // Adicionar apenas os itens que foram importados com sucesso
+    alert(`${importedItems.length} item(s) encontrado(s) e selecionado(s).`);
+  };
+  
   return (
     <div className="p-4">
       <Tabs defaultValue="truck">
-        <TabsList className="grid grid-cols-3 mb-4">
+        <TabsList className="grid grid-cols-4 mb-4">
           <TabsTrigger value="truck">Caminhão</TabsTrigger>
           <TabsTrigger value="items">Itens</TabsTrigger>
-          <TabsTrigger value="rules">Regras de Empilhamento</TabsTrigger>
+          <TabsTrigger value="rules">Regras</TabsTrigger>
+          <TabsTrigger value="import">Importar</TabsTrigger>
         </TabsList>
         
         {/* Truck Configuration */}
@@ -357,8 +402,27 @@ const ConfigPanel = () => {
             </div>
           </div>
           
-          <div>
-            <h3 className="text-lg font-medium mb-2">Itens Disponíveis</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium">Itens Disponíveis</h3>
+              
+              <div className="flex gap-2">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => useFurnitureStore.getState().saveItemsToLocalStorage()}
+                >
+                  Salvar Local
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => useFurnitureStore.getState().loadItemsFromLocalStorage()}
+                >
+                  Carregar Local
+                </Button>
+              </div>
+            </div>
             {items.length === 0 ? (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
@@ -388,14 +452,24 @@ const ConfigPanel = () => {
                           <div className="text-sm mt-1">
                             <div>Peso: {item.weight} kg</div>
                           </div>
-                          <Button 
-                            variant="destructive" 
-                            size="sm" 
-                            onClick={() => removeItem(item.id)}
-                            className="w-full"
-                          >
-                            Remover
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => handleStartEdit(item.id)}
+                              className="flex-1"
+                            >
+                              Editar
+                            </Button>
+                            <Button 
+                              variant="destructive" 
+                              size="sm" 
+                              onClick={() => removeItem(item.id)}
+                              className="flex-1"
+                            >
+                              Remover
+                            </Button>
+                          </div>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -403,6 +477,57 @@ const ConfigPanel = () => {
                 </Accordion>
               </ScrollArea>
             )}
+          </div>
+        </TabsContent>
+        
+        {/* Import by Code */}
+        <TabsContent value="import" className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium mb-2">Importar Itens por Código</h3>
+            <p className="text-sm text-muted-foreground mb-2">
+              Digite os códigos dos produtos a serem carregados.
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <Input
+                  value={importCode}
+                  onChange={(e) => setImportCode(e.target.value)}
+                  placeholder="ex: SOF-001"
+                  className="flex-grow"
+                />
+                <Button onClick={handleAddImportCode} size="sm">
+                  Adicionar
+                </Button>
+              </div>
+              
+              {importCodes.length > 0 && (
+                <div className="bg-secondary/30 p-2 rounded-md">
+                  <p className="text-sm font-medium mb-1">Códigos para importar:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {importCodes.map((code, index) => (
+                      <div key={index} className="flex items-center gap-1 bg-secondary px-2 py-1 rounded-md text-xs">
+                        <span>{code}</span>
+                        <button 
+                          className="text-destructive hover:text-destructive/80"
+                          onClick={() => setImportCodes(importCodes.filter((_, i) => i !== index))}
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <Button 
+                onClick={handleImportItems} 
+                className="w-full"
+                disabled={importCodes.length === 0}
+              >
+                Importar Itens
+              </Button>
+            </div>
           </div>
         </TabsContent>
         

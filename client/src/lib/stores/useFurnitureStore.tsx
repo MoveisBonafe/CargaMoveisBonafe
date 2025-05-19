@@ -20,6 +20,14 @@ interface FurnitureState {
   addStackingRule: (item1Id: string, item2Id: string) => void;
   removeStackingRule: (item1Id: string, item2Id: string) => void;
   getStackingRules: () => StackingRule[];
+  
+  // Local storage
+  saveItemsToLocalStorage: () => void;
+  loadItemsFromLocalStorage: () => void;
+  
+  // Importação/Exportação
+  importItemsByCode: (codes: string[]) => FurnitureItem[];
+  findItemByCode: (code: string) => FurnitureItem | undefined;
 }
 
 // Sample furniture items
@@ -149,5 +157,58 @@ export const useFurnitureStore = create<FurnitureState>((set, get) => ({
   
   getStackingRules: () => {
     return get().stackingRules;
+  },
+  
+  // Funções de armazenamento local
+  saveItemsToLocalStorage: () => {
+    const { items, stackingRules } = get();
+    try {
+      localStorage.setItem('furniture-items', JSON.stringify(items));
+      localStorage.setItem('stacking-rules', JSON.stringify(stackingRules));
+      console.log('Itens e regras salvos no armazenamento local.');
+    } catch (error) {
+      console.error('Erro ao salvar no armazenamento local:', error);
+    }
+  },
+  
+  loadItemsFromLocalStorage: () => {
+    try {
+      const savedItems = localStorage.getItem('furniture-items');
+      const savedRules = localStorage.getItem('stacking-rules');
+      
+      if (savedItems) {
+        const parsedItems = JSON.parse(savedItems) as FurnitureItem[];
+        set({ items: parsedItems });
+        console.log('Itens carregados do armazenamento local.');
+      }
+      
+      if (savedRules) {
+        const parsedRules = JSON.parse(savedRules) as StackingRule[];
+        set({ stackingRules: parsedRules });
+        console.log('Regras carregadas do armazenamento local.');
+      }
+    } catch (error) {
+      console.error('Erro ao carregar do armazenamento local:', error);
+    }
+  },
+  
+  // Funções de importação/exportação
+  importItemsByCode: (codes: string[]) => {
+    const { items } = get();
+    const importedItems: FurnitureItem[] = [];
+    
+    for (const code of codes) {
+      const foundItem = items.find(item => item.code === code);
+      if (foundItem) {
+        importedItems.push(foundItem);
+      }
+    }
+    
+    return importedItems;
+  },
+  
+  findItemByCode: (code: string) => {
+    const { items } = get();
+    return items.find(item => item.code === code);
   }
 }));
