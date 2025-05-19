@@ -278,8 +278,6 @@ const TruckVisualization = () => {
       />
       
       <Suspense fallback={null}>
-        <Environment preset="warehouse" />
-        
         {/* Truck */}
         <Truck />
         
