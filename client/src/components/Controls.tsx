@@ -49,7 +49,7 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   const weightStats = calculateWeightUsage();
   
   return (
-    <Html position={[-truckDimensions.width / 2 - 2, truckDimensions.height / 2, 0]}>
+    <Html position={[truckDimensions.width / 2 - 3, truckDimensions.height / 2 + 1, 0]}>
       <div 
         className={cn(
           "bg-card border border-border rounded-md shadow-lg transition-all duration-300",
