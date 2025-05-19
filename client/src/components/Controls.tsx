@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Html } from "@react-three/drei";
 import { FurnitureItem, FurnitureItemPosition } from "../types";
 import { useTruckStore } from "../lib/stores/useTruckStore";
 import { cn } from "../lib/utils";
+import { useThree } from "@react-three/fiber";
 
 interface ControlsProps {
   items: FurnitureItem[];
@@ -14,6 +15,18 @@ interface ControlsProps {
 const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { truckDimensions, currentWeight } = useTruckStore();
+  const { size, viewport } = useThree();
+  
+  // Estado para controlar a posição da legenda
+  const [position, setPosition] = useState<[number, number, number]>([truckDimensions.width / 2 - 3, truckDimensions.height / 2 + 1, 0]);
+  
+  // Estado para controlar o arrasto da legenda
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const panelRef = useRef<HTMLDivElement>(null);
+  
+  // Estado para controlar a quantidade de itens a adicionar
+  const [itemQuantities, setItemQuantities] = useState<{[key: string]: number}>({});
   
   // Get placed item IDs for checking availability
   const placedItemIds = placedItems.map(item => item.id);
@@ -48,22 +61,90 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   const volumeStats = calculateVolumeUsage();
   const weightStats = calculateWeightUsage();
   
+  // Funções para controle de arrasto do painel
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setIsDragging(true);
+      dragStartPos.current = { x: e.clientX, y: e.clientY };
+      e.preventDefault();
+    }
+  };
+  
+  // Inicializa as quantidades se necessário
+  useEffect(() => {
+    const quantities: {[key: string]: number} = {};
+    items.forEach(item => {
+      if (!(item.id in itemQuantities)) {
+        quantities[item.id] = 1;
+      }
+    });
+    
+    if (Object.keys(quantities).length > 0) {
+      setItemQuantities(prev => ({ ...prev, ...quantities }));
+    }
+  }, [items]);
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging && panelRef.current) {
+        const deltaX = (e.clientX - dragStartPos.current.x) / viewport.factor;
+        const deltaY = (e.clientY - dragStartPos.current.y) / viewport.factor;
+        
+        setPosition([
+          position[0] + deltaX * 0.01,
+          position[1] - deltaY * 0.01,
+          position[2]
+        ]);
+        
+        dragStartPos.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+    
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, position, viewport.factor]);
+  
+  // Função para adicionar múltiplos itens de uma vez
+  const handleAddMultipleItems = (itemId: string) => {
+    const quantity = itemQuantities[itemId] || 1;
+    for (let i = 0; i < quantity; i++) {
+      onDragStart(itemId);
+    }
+  };
+  
   return (
-    <Html position={[truckDimensions.width / 2 - 3, truckDimensions.height / 2 + 1, 0]}>
+    <Html position={[position[0], position[1], position[2]]}>
       <div 
+        ref={panelRef}
         className={cn(
           "bg-card border border-border rounded-md shadow-lg transition-all duration-300",
-          isExpanded ? "w-64" : "w-10"
+          isExpanded ? "w-64" : "w-10",
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         )}
       >
-        <div className="flex items-center justify-between p-2 border-b border-border">
+        <div 
+          className="flex items-center justify-between p-2 border-b border-border"
+          onMouseDown={handleMouseDown}
+        >
           <h3 className={cn("font-medium", !isExpanded && "hidden")}>Itens Disponíveis</h3>
-          <button
-            className="p-1 rounded-md hover:bg-secondary/50"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            {isExpanded ? "←" : "→"}
-          </button>
+          <div className="flex gap-1">
+            <span className="text-xs text-muted-foreground">{isDragging ? "Movendo..." : "Arraste aqui"}</span>
+            <button
+              className="p-1 rounded-md hover:bg-secondary/50"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? "←" : "→"}
+            </button>
+          </div>
         </div>
         
         {isExpanded && (
