@@ -107,11 +107,20 @@ const TruckVisualization = () => {
     if (existingPlacement) {
       // If item is already placed, remove it from placed items
       setPlacedItems(placedItems.filter(item => item.id !== itemId));
+      // Reduzir o peso atual do caminhão
+      removeWeight(existingPlacement.weight);
       setDraggedItem(existingPlacement);
     } else {
       // If it's a new item, create a new placement
       const itemData = items.find(item => item.id === itemId);
       if (itemData) {
+        // Verificar se adicionar esse item excederá o peso máximo do caminhão
+        if (currentWeight + itemData.weight > truckDimensions.maxWeight) {
+          alert(`Não é possível adicionar este item. Excederá o peso máximo do caminhão (${truckDimensions.maxWeight} kg).`);
+          playHit();
+          return;
+        }
+        
         const newPlacement: FurnitureItemPosition = {
           ...itemData,
           position: { x: 0, y: itemData.height / 2, z: 0 },
@@ -213,7 +222,17 @@ const TruckVisualization = () => {
       }
     }
     
+    // Verificar se a altura máxima de empilhamento será excedida
+    if (y + itemData.height / 2 > truckDimensions.maxStackHeight) {
+      alert(`Não é possível colocar este item. Excederá a altura máxima de empilhamento (${truckDimensions.maxStackHeight} unidades).`);
+      playHit();
+      return;
+    }
+    
     if (!hasCollision) {
+      // Adicionar o peso do item ao peso total do caminhão
+      addWeight(itemData.weight);
+      
       // Add to placed items
       setPlacedItems([...placedItems, newPlacement]);
       setDraggedItem(null);

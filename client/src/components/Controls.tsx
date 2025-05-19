@@ -13,7 +13,7 @@ interface ControlsProps {
 
 const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const { truckDimensions } = useTruckStore();
+  const { truckDimensions, currentWeight } = useTruckStore();
   
   // Get placed item IDs for checking availability
   const placedItemIds = placedItems.map(item => item.id);
@@ -32,7 +32,21 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
     };
   };
   
+  // Calculate weight usage statistics
+  const calculateWeightUsage = () => {
+    const totalItemsWeight = placedItems.reduce((acc, item) => {
+      return acc + item.weight;
+    }, 0);
+    
+    return {
+      used: totalItemsWeight,
+      total: truckDimensions.maxWeight,
+      percentage: (totalItemsWeight / truckDimensions.maxWeight) * 100
+    };
+  };
+  
   const volumeStats = calculateVolumeUsage();
+  const weightStats = calculateWeightUsage();
   
   return (
     <Html position={[-truckDimensions.width / 2 - 2, truckDimensions.height / 2, 0]}>
@@ -54,21 +68,46 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
         
         {isExpanded && (
           <>
-            <div className="p-3 border-b border-border">
-              <div className="mb-1 flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Uso do Volume do Caminhão</span>
-                <span className="text-xs font-medium">
-                  {volumeStats.percentage.toFixed(1)}%
-                </span>
+            <div className="p-3 border-b border-border space-y-3">
+              {/* Volume usage */}
+              <div>
+                <div className="mb-1 flex justify-between items-center">
+                  <span className="text-xs text-muted-foreground">Uso do Volume do Caminhão</span>
+                  <span className="text-xs font-medium">
+                    {volumeStats.percentage.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full">
+                  <div 
+                    className="bg-primary h-2 rounded-full"
+                    style={{ width: `${Math.min(volumeStats.percentage, 100)}%` }}
+                  />
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">
+                  {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} unidades cúbicas
+                </div>
               </div>
-              <div className="w-full bg-secondary h-2 rounded-full">
-                <div 
-                  className="bg-primary h-2 rounded-full"
-                  style={{ width: `${Math.min(volumeStats.percentage, 100)}%` }}
-                />
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">
-                {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} unidades cúbicas
+              
+              {/* Weight usage */}
+              <div>
+                <div className="mb-1 flex justify-between items-center">
+                  <span className="text-xs text-muted-foreground">Uso do Peso do Caminhão</span>
+                  <span className="text-xs font-medium">
+                    {weightStats.percentage.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full">
+                  <div 
+                    className={cn(
+                      "h-2 rounded-full",
+                      weightStats.percentage > 90 ? "bg-destructive" : "bg-primary"
+                    )}
+                    style={{ width: `${Math.min(weightStats.percentage, 100)}%` }}
+                  />
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">
+                  {weightStats.used.toFixed(0)} / {weightStats.total.toFixed(0)} kg
+                </div>
               </div>
             </div>
             
