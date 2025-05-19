@@ -29,6 +29,7 @@ const ConfigPanel = () => {
     width: 1,
     height: 1,
     depth: 1,
+    weight: 10,
     color: "#3b82f6"
   });
   
@@ -37,7 +38,7 @@ const ConfigPanel = () => {
   
   const handleAddItem = () => {
     if (!newItem.name.trim()) {
-      alert("Please enter a name for the item");
+      alert("Por favor, digite um nome para o item");
       return;
     }
     
@@ -51,6 +52,7 @@ const ConfigPanel = () => {
       width: 1,
       height: 1,
       depth: 1,
+      weight: 10,
       color: getRandomColor()
     });
   };
@@ -94,7 +96,7 @@ const ConfigPanel = () => {
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-medium mb-2">Dimensões do Caminhão</h3>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2 mb-4">
                 <div>
                   <Label htmlFor="truckWidth">Largura</Label>
                   <Input
@@ -138,6 +140,37 @@ const ConfigPanel = () => {
                   />
                 </div>
               </div>
+              
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label htmlFor="truckMaxWeight">Peso Máximo (kg)</Label>
+                  <Input
+                    id="truckMaxWeight"
+                    type="number"
+                    min="100"
+                    step="100"
+                    value={truckDimensions.maxWeight}
+                    onChange={(e) => setTruckDimensions({
+                      ...truckDimensions,
+                      maxWeight: Number(e.target.value) || 100
+                    })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="truckMaxStackHeight">Altura Máx. Empilhamento</Label>
+                  <Input
+                    id="truckMaxStackHeight"
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={truckDimensions.maxStackHeight}
+                    onChange={(e) => setTruckDimensions({
+                      ...truckDimensions,
+                      maxStackHeight: Number(e.target.value) || 1
+                    })}
+                  />
+                </div>
+              </div>
             </div>
             
             <div>
@@ -175,7 +208,7 @@ const ConfigPanel = () => {
                 />
               </div>
               
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
                   <Label htmlFor="itemWidth">Largura</Label>
                   <Input
@@ -215,6 +248,20 @@ const ConfigPanel = () => {
                     onChange={(e) => setNewItem({ 
                       ...newItem, 
                       depth: Number(e.target.value) || 0.1 
+                    })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="itemWeight">Peso (kg)</Label>
+                  <Input
+                    id="itemWeight"
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={newItem.weight}
+                    onChange={(e) => setNewItem({ 
+                      ...newItem, 
+                      weight: Number(e.target.value) || 0.1 
                     })}
                   />
                 </div>
@@ -271,6 +318,9 @@ const ConfigPanel = () => {
                             <div>Largura: {item.width}</div>
                             <div>Altura: {item.height}</div>
                             <div>Profundidade: {item.depth}</div>
+                          </div>
+                          <div className="text-sm mt-1">
+                            <div>Peso: {item.weight} kg</div>
                           </div>
                           <Button 
                             variant="destructive" 

@@ -25,34 +25,38 @@ interface FurnitureState {
 const SAMPLE_ITEMS: FurnitureItem[] = [
   {
     id: "sofa",
-    name: "Sofa",
+    name: "Sofá",
     width: 2.5,
     height: 1,
     depth: 1,
+    weight: 80, // 80kg
     color: "#3b82f6"
   },
   {
     id: "table",
-    name: "Dining Table",
+    name: "Mesa de Jantar",
     width: 2,
     height: 0.8,
     depth: 1.2,
+    weight: 45, // 45kg
     color: "#10b981"
   },
   {
     id: "chair",
-    name: "Chair",
+    name: "Cadeira",
     width: 0.6,
     height: 0.9,
     depth: 0.6,
+    weight: 8, // 8kg
     color: "#f59e0b"
   },
   {
     id: "bed",
-    name: "Bed Frame",
+    name: "Estrutura de Cama",
     width: 2,
     height: 0.4,
     depth: 1.8,
+    weight: 65, // 65kg
     color: "#8b5cf6"
   }
 ];

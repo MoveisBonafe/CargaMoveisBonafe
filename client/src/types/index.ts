@@ -16,6 +16,7 @@ export interface FurnitureItem {
   width: number;
   height: number;
   depth: number;
+  weight: number; // Peso em kg
   color: string;
 }
 

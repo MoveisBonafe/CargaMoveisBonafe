@@ -88,7 +88,13 @@ const Truck = () => {
 // Main visualization component
 const TruckVisualization = () => {
   const { items, placedItems, setPlacedItems, getStackingRules, resetPlacedItems } = useFurnitureStore();
-  const { truckDimensions } = useTruckStore();
+  const { 
+    truckDimensions, 
+    currentWeight, 
+    addWeight, 
+    removeWeight, 
+    resetWeight 
+  } = useTruckStore();
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [draggedItem, setDraggedItem] = useState<FurnitureItemPosition | null>(null);
   const { playHit, playSuccess } = useAudio.getState();
