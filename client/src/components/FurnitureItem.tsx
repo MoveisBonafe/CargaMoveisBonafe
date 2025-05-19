@@ -33,13 +33,15 @@ const FurnitureItem = ({
   
   // Handle pointer down event
   const handlePointerDown = (e: any) => {
-    if (!isPlaced && !isDragging) return;
+    // Permitir interação tanto com itens colocados quanto com itens sendo arrastados
     e.stopPropagation();
     setIsDraggingInternal(true);
+    
     if (onDragStart) {
       onDragStart();
       playHit();
     }
+    
     gl.domElement.style.cursor = 'grabbing';
   };
   

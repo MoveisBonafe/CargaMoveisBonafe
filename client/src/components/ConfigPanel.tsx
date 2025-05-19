@@ -33,6 +33,9 @@ const ConfigPanel = () => {
     color: "#3b82f6"
   });
   
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  
   const [newRuleItem1, setNewRuleItem1] = useState("");
   const [newRuleItem2, setNewRuleItem2] = useState("");
   

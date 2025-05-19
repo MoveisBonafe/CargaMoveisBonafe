@@ -105,10 +105,9 @@ const TruckVisualization = () => {
     const existingPlacement = placedItems.find(item => item.id === itemId);
     
     if (existingPlacement) {
-      // If item is already placed, remove it from placed items
-      setPlacedItems(placedItems.filter(item => item.id !== itemId));
-      // Reduzir o peso atual do caminhão
-      removeWeight(existingPlacement.weight);
+      // Se o item já está colocado, permitir o ajuste fino
+      // sem removê-lo completamente, apenas marcá-lo como selecionado
+      // para permitir o reposicionamento sem perder seu lugar
       setDraggedItem(existingPlacement);
     } else {
       // If it's a new item, create a new placement
@@ -131,12 +130,24 @@ const TruckVisualization = () => {
     }
   };
   
+  // Referência para a função de rotação
+  const [rotationMode, setRotationMode] = useState(false);
+  const [keyboardControlsActive, setKeyboardControlsActive] = useState(false);
+  
+  // Função para alternar modo de rotação
+  const toggleRotationMode = () => {
+    setRotationMode(prev => !prev);
+  };
+  
   // Function to handle item placement
   const handlePlacement = (position: THREE.Vector3) => {
     if (!draggedItem || !selectedItem) return;
     
     const itemData = items.find(item => item.id === selectedItem);
     if (!itemData) return;
+    
+    // Verificar se o item já estava colocado (ajuste fino)
+    const itemAlreadyPlaced = placedItems.some(item => item.id === selectedItem);
     
     // Check if position is within truck bounds
     const halfWidth = itemData.width / 2;
@@ -230,11 +241,20 @@ const TruckVisualization = () => {
     }
     
     if (!hasCollision) {
-      // Adicionar o peso do item ao peso total do caminhão
-      addWeight(itemData.weight);
+      if (itemAlreadyPlaced) {
+        // Se é um ajuste de posição, atualize a posição do item existente
+        const updatedItems = placedItems.map(item => 
+          item.id === selectedItem ? newPlacement : item
+        );
+        setPlacedItems(updatedItems);
+      } else {
+        // Adicionar o peso do item ao peso total do caminhão (apenas para novos itens)
+        addWeight(itemData.weight);
+        
+        // Add to placed items
+        setPlacedItems([...placedItems, newPlacement]);
+      }
       
-      // Add to placed items
-      setPlacedItems([...placedItems, newPlacement]);
       setDraggedItem(null);
       setSelectedItem(null);
       playSuccess();

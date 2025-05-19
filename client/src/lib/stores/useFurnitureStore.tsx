@@ -10,6 +10,7 @@ interface FurnitureState {
   addItem: (item: FurnitureItem) => void;
   removeItem: (id: string) => void;
   resetItems: () => void;
+  updateItem: (id: string, updatedItem: Partial<FurnitureItem>) => void;
   
   // Placement management
   setPlacedItems: (items: FurnitureItemPosition[]) => void;
