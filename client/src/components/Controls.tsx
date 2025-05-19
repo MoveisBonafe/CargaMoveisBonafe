@@ -138,7 +138,7 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
         )}
       >
         <div 
-          className="flex items-center justify-between p-2 border-b border-border"
+          className="flex items-center justify-between p-2 border-b border-border cursor-move bg-secondary/20"
           onMouseDown={handleMouseDown}
         >
           <h3 className={cn("font-medium", !isExpanded && "hidden")}>Itens Disponíveis</h3>

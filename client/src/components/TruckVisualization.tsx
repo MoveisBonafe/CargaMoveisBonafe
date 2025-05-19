@@ -226,9 +226,31 @@ const TruckVisualization = () => {
     // Find floor level (may be on top of another item)
     let y = itemData.height / 2; // Start with item on the ground
     
+    // Se a distribuição automática está ativada e item não já estava colocado
+    let finalPosition = { x, y, z };
+    
+    if (autoDistribute && !itemAlreadyPlaced) {
+      // Criar um objeto temporário para passar para a função findOptimalPosition
+      const tempItem: FurnitureItemPosition = {
+        ...itemData,
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 }
+      };
+      
+      // Encontrar posição ótima e usar suas coordenadas
+      const optimalPos = findOptimalPosition(tempItem);
+      finalPosition = { 
+        x: optimalPos.x, 
+        y: optimalPos.y, 
+        z: optimalPos.z 
+      };
+      
+      console.log("Posicionando automaticamente em:", finalPosition);
+    }
+    
     const newPlacement: FurnitureItemPosition = {
       ...itemData,
-      position: { x, y, z },
+      position: finalPosition,
       rotation: draggedItem.rotation
     };
     
