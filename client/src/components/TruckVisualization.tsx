@@ -1,0 +1,289 @@
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useState, useRef, useCallback } from "react";
+import { 
+  OrbitControls, 
+  useTexture, 
+  Grid, 
+  Environment, 
+  PerspectiveCamera 
+} from "@react-three/drei";
+import * as THREE from "three";
+import { useKeyboardControls } from "@react-three/drei";
+import { Controls as ControlsType, FurnitureItemPosition } from "../types";
+import FurnitureItem from "./FurnitureItem";
+import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
+import { useTruckStore } from "../lib/stores/useTruckStore";
+import ControlsPanel from "./Controls";
+import { useAudio } from "../lib/stores/useAudio";
+
+// Helper function to check collisions between two items
+const checkCollision = (item1: FurnitureItemPosition, item2: FurnitureItemPosition) => {
+  return (
+    item1.position.x < item2.position.x + item2.width &&
+    item1.position.x + item1.width > item2.position.x &&
+    item1.position.y < item2.position.y + item2.height &&
+    item1.position.y + item1.height > item2.position.y &&
+    item1.position.z < item2.position.z + item2.depth &&
+    item1.position.z + item1.depth > item2.position.z
+  );
+};
+
+// Truck component for visualizing the truck box
+const Truck = () => {
+  const woodTexture = useTexture("/textures/wood.jpg");
+  woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping;
+  woodTexture.repeat.set(5, 5);
+  
+  const { truckDimensions } = useTruckStore();
+  const { width, height, depth } = truckDimensions;
+  
+  return (
+    <group>
+      {/* Floor */}
+      <mesh position={[0, 0, 0]} receiveShadow>
+        <boxGeometry args={[width, 0.2, depth]} />
+        <meshStandardMaterial map={woodTexture} />
+      </mesh>
+      
+      {/* Back wall */}
+      <mesh position={[0, height / 2, -depth / 2]} receiveShadow>
+        <boxGeometry args={[width, height, 0.2]} />
+        <meshStandardMaterial color="#555555" transparent opacity={0.2} />
+      </mesh>
+      
+      {/* Left wall */}
+      <mesh position={[-width / 2, height / 2, 0]} receiveShadow>
+        <boxGeometry args={[0.2, height, depth]} />
+        <meshStandardMaterial color="#555555" transparent opacity={0.2} />
+      </mesh>
+      
+      {/* Right wall */}
+      <mesh position={[width / 2, height / 2, 0]} receiveShadow>
+        <boxGeometry args={[0.2, height, depth]} />
+        <meshStandardMaterial color="#555555" transparent opacity={0.2} />
+      </mesh>
+      
+      {/* Ceiling (optional, can be transparent) */}
+      <mesh position={[0, height, 0]} receiveShadow>
+        <boxGeometry args={[width, 0.2, depth]} />
+        <meshStandardMaterial color="#444444" transparent opacity={0.1} />
+      </mesh>
+      
+      {/* Grid for floor reference */}
+      <Grid
+        position={[0, 0.11, 0]}
+        args={[width, depth, 10, 10]}
+        cellSize={1}
+        cellThickness={0.3}
+        cellColor="#6f6f6f"
+        sectionSize={3}
+        sectionThickness={1}
+        sectionColor="#9d4b4b"
+        fadeDistance={30}
+      />
+    </group>
+  );
+};
+
+// Main visualization component
+const TruckVisualization = () => {
+  const { items, placedItems, setPlacedItems, getStackingRules, resetPlacedItems } = useFurnitureStore();
+  const { truckDimensions } = useTruckStore();
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [draggedItem, setDraggedItem] = useState<FurnitureItemPosition | null>(null);
+  const { playHit, playSuccess } = useAudio.getState();
+  
+  // Function to handle item drag start
+  const handleDragStart = (itemId: string) => {
+    setSelectedItem(itemId);
+    const existingPlacement = placedItems.find(item => item.id === itemId);
+    
+    if (existingPlacement) {
+      // If item is already placed, remove it from placed items
+      setPlacedItems(placedItems.filter(item => item.id !== itemId));
+      setDraggedItem(existingPlacement);
+    } else {
+      // If it's a new item, create a new placement
+      const itemData = items.find(item => item.id === itemId);
+      if (itemData) {
+        const newPlacement: FurnitureItemPosition = {
+          ...itemData,
+          position: { x: 0, y: itemData.height / 2, z: 0 },
+          rotation: { x: 0, y: 0, z: 0 }
+        };
+        setDraggedItem(newPlacement);
+      }
+    }
+  };
+  
+  // Function to handle item placement
+  const handlePlacement = (position: THREE.Vector3) => {
+    if (!draggedItem || !selectedItem) return;
+    
+    const itemData = items.find(item => item.id === selectedItem);
+    if (!itemData) return;
+    
+    // Check if position is within truck bounds
+    const halfWidth = itemData.width / 2;
+    const halfDepth = itemData.depth / 2;
+    
+    const truckHalfWidth = truckDimensions.width / 2;
+    const truckHalfDepth = truckDimensions.depth / 2;
+    
+    let x = Math.min(Math.max(position.x, -truckHalfWidth + halfWidth), truckHalfWidth - halfWidth);
+    let z = Math.min(Math.max(position.z, -truckHalfDepth + halfDepth), truckHalfDepth - halfDepth);
+    
+    // Find floor level (may be on top of another item)
+    let y = itemData.height / 2; // Start with item on the ground
+    
+    const newPlacement: FurnitureItemPosition = {
+      ...itemData,
+      position: { x, y, z },
+      rotation: draggedItem.rotation
+    };
+    
+    // Check if we can place it on top of another item
+    const stackingRules = getStackingRules();
+    
+    // Sort placed items by y-position (height) to check from bottom to top
+    const sortedItems = [...placedItems].sort((a, b) => 
+      a.position.y - b.position.y
+    );
+    
+    for (const placedItem of sortedItems) {
+      // Skip if it's the same item
+      if (placedItem.id === selectedItem) continue;
+      
+      // Create temporary placement to check collision at current height
+      const tempPlacement = { ...newPlacement };
+      
+      // Check if there's an x-z overlap (item is above the other)
+      if (
+        Math.abs(placedItem.position.x - x) < (placedItem.width + itemData.width) / 2 &&
+        Math.abs(placedItem.position.z - z) < (placedItem.depth + itemData.depth) / 2
+      ) {
+        // Check if we can stack this item on top of the other
+        const canStack = stackingRules.some(rule => 
+          rule.item1Id === placedItem.id && rule.item2Id === selectedItem
+        );
+        
+        if (canStack) {
+          // Calculate new y position on top of the item
+          const newY = placedItem.position.y + placedItem.height / 2 + itemData.height / 2;
+          
+          // Update position and check if it exceeds truck height
+          if (newY + itemData.height / 2 <= truckDimensions.height) {
+            y = newY;
+          }
+        }
+      }
+    }
+    
+    // Update final placement
+    newPlacement.position.y = y;
+    
+    // Check collision with other items
+    let hasCollision = false;
+    for (const placedItem of placedItems) {
+      if (placedItem.id === selectedItem) continue;
+      
+      if (checkCollision(newPlacement, placedItem)) {
+        hasCollision = true;
+        break;
+      }
+    }
+    
+    if (!hasCollision) {
+      // Add to placed items
+      setPlacedItems([...placedItems, newPlacement]);
+      setDraggedItem(null);
+      setSelectedItem(null);
+      playSuccess();
+    } else {
+      // If collision, play error sound
+      playHit();
+    }
+  };
+  
+  // Function to handle drag movement
+  const handleDragMove = (position: THREE.Vector3) => {
+    if (!draggedItem) return;
+    
+    setDraggedItem({
+      ...draggedItem,
+      position: { 
+        x: position.x, 
+        y: draggedItem.height / 2, 
+        z: position.z 
+      }
+    });
+  };
+  
+  return (
+    <Canvas shadows>
+      <PerspectiveCamera
+        makeDefault
+        position={[10, 10, 10]}
+        fov={45}
+        near={0.1}
+        far={1000}
+      />
+      
+      <ambientLight intensity={0.5} />
+      <directionalLight 
+        position={[10, 10, 5]} 
+        intensity={1} 
+        castShadow 
+        shadow-mapSize-width={2048} 
+        shadow-mapSize-height={2048}
+      />
+      
+      <Suspense fallback={null}>
+        <Environment preset="warehouse" />
+        
+        {/* Truck */}
+        <Truck />
+        
+        {/* Placed items */}
+        {placedItems.map((item) => (
+          <FurnitureItem
+            key={item.id}
+            item={item}
+            isPlaced={true}
+            onDragStart={() => handleDragStart(item.id)}
+            isSelected={selectedItem === item.id}
+          />
+        ))}
+        
+        {/* Currently dragged item */}
+        {draggedItem && (
+          <FurnitureItem
+            item={draggedItem}
+            isPlaced={false}
+            isDragging={true}
+            isSelected={true}
+            onDragMove={handleDragMove}
+            onPlacement={handlePlacement}
+          />
+        )}
+        
+        {/* Controls panel for item selection */}
+        <ControlsPanel 
+          items={items} 
+          placedItems={placedItems} 
+          onDragStart={handleDragStart} 
+          selectedItem={selectedItem}
+        />
+        
+        <OrbitControls 
+          makeDefault 
+          minDistance={2}
+          maxDistance={30}
+          target={[0, truckDimensions.height / 2, 0]}
+        />
+      </Suspense>
+    </Canvas>
+  );
+};
+
+export default TruckVisualization;
