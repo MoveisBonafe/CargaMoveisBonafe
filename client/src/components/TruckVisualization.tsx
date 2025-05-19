@@ -1,11 +1,12 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useState, useRef, useCallback } from "react";
+import { Suspense, useState, useRef, useCallback, useEffect } from "react";
 import { 
   OrbitControls, 
   useTexture, 
   Grid, 
   Environment, 
-  PerspectiveCamera 
+  PerspectiveCamera,
+  Plane
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useKeyboardControls } from "@react-three/drei";
@@ -134,9 +135,58 @@ const TruckVisualization = () => {
   const [rotationMode, setRotationMode] = useState(false);
   const [keyboardControlsActive, setKeyboardControlsActive] = useState(false);
   
+  // Estado para controlar a distribuição automática
+  const [autoDistribute, setAutoDistribute] = useState(true);
+  
   // Função para alternar modo de rotação
   const toggleRotationMode = () => {
     setRotationMode(prev => !prev);
+  };
+  
+  // Função para encontrar uma posição adequada para um novo item
+  const findOptimalPosition = (itemData: FurnitureItemPosition): THREE.Vector3 => {
+    const { width, height, depth } = itemData;
+    const { width: truckWidth, height: truckHeight, depth: truckDepth } = truckDimensions;
+    
+    // Definir uma grade para posições potenciais
+    const gridStepX = 0.5;
+    const gridStepZ = 0.5;
+    
+    // Começar do fundo do caminhão
+    for (let z = -truckDepth/2 + depth/2; z <= truckDepth/2 - depth/2; z += gridStepZ) {
+      for (let x = -truckWidth/2 + width/2; x <= truckWidth/2 - width/2; x += gridStepX) {
+        // Verificar se podemos colocar no chão
+        const position = new THREE.Vector3(x, height/2, z);
+        
+        // Crie uma posição de teste para verificar colisões
+        const testPlacement = {
+          ...itemData,
+          position: {
+            x: position.x,
+            y: position.y,
+            z: position.z
+          },
+          rotation: { x: 0, y: 0, z: 0 }
+        };
+        
+        // Verificar colisões com itens já colocados
+        let hasCollision = false;
+        for (const placedItem of placedItems) {
+          if (checkCollision(testPlacement, placedItem)) {
+            hasCollision = true;
+            break;
+          }
+        }
+        
+        // Se não houver colisão, retornar esta posição
+        if (!hasCollision) {
+          return position;
+        }
+      }
+    }
+    
+    // Se não encontrar uma posição ótima, retornar o centro do caminhão
+    return new THREE.Vector3(0, height/2, 0);
   };
   
   // Function to handle item placement

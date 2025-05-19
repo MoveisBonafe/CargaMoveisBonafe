@@ -89,13 +89,15 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
         const deltaX = (e.clientX - dragStartPos.current.x) / viewport.factor;
         const deltaY = (e.clientY - dragStartPos.current.y) / viewport.factor;
         
+        // Aumentei a sensibilidade do movimento para 0.05 (era 0.01)
         setPosition([
-          position[0] + deltaX * 0.01,
-          position[1] - deltaY * 0.01,
+          position[0] + deltaX * 0.05,
+          position[1] - deltaY * 0.05,
           position[2]
         ]);
         
         dragStartPos.current = { x: e.clientX, y: e.clientY };
+        console.log("Movendo painel", position);
       }
     };
     
@@ -115,6 +117,11 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   // Função para adicionar múltiplos itens de uma vez
   const handleAddMultipleItems = (itemId: string) => {
     const quantity = itemQuantities[itemId] || 1;
+    
+    // Aqui notificamos o usuário sobre a quantidade de itens sendo adicionados
+    console.log(`Adicionando ${quantity}x item ${itemId}`);
+    alert(`Adicionando ${quantity} unidades do item!`);
+    
     for (let i = 0; i < quantity; i++) {
       onDragStart(itemId);
     }
