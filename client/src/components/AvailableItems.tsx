@@ -1,27 +1,29 @@
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { ScrollArea } from "./ui/scroll-area";
-import { Button } from "./ui/button";
 import { FurnitureItem } from "../types";
+import { AlertCircle } from "lucide-react";
 
 interface AvailableItemsProps {
   onItemSelect?: (item: FurnitureItem) => void;
 }
 
 const AvailableItems = ({ onItemSelect }: AvailableItemsProps) => {
-  const { items } = useFurnitureStore();
+  const { items, saveItemsToLocalStorage } = useFurnitureStore();
 
   return (
-    <div className="border-t border-border pt-4">
-      <h2 className="text-lg font-semibold mb-3">Itens Disponíveis</h2>
+    <div>
       {items.length === 0 ? (
-        <div className="text-center p-4 bg-muted rounded-md">
+        <div className="text-center p-3 bg-muted rounded-md">
+          <div className="flex justify-center mb-1">
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          </div>
           <p className="text-sm text-muted-foreground">
             Nenhum item cadastrado. Use "Gerenciar Móveis" para adicionar itens.
           </p>
         </div>
       ) : (
-        <ScrollArea className="h-[200px] pr-4">
-          <div className="space-y-2">
+        <ScrollArea className="h-[150px]">
+          <div className="space-y-2 pr-2">
             {items.map((item) => (
               <div
                 key={item.id}

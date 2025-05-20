@@ -53,6 +53,16 @@ const TruckLoader = () => {
           </div>
         </div>
         
+        {/* Itens Disponíveis - Sempre visível */}
+        <div className="px-4 py-3 border-b border-border bg-muted/30">
+          <h2 className="text-lg font-semibold mb-2 flex items-center">
+            Itens Disponíveis
+          </h2>
+          <div className="h-[150px]">
+            <AvailableItems />
+          </div>
+        </div>
+        
         <div className="flex-grow overflow-auto custom-scrollbar">
           {activePanel === "config" ? (
             <div className="space-y-6 p-4">
@@ -63,14 +73,9 @@ const TruckLoader = () => {
               </div>
               
               {/* Gerenciamento de Móveis */}
-              <div className="border-b pb-4">
+              <div className="pb-4">
                 <h2 className="text-xl font-semibold mb-3">Gerenciamento de Móveis</h2>
                 <FurnitureManager />
-              </div>
-              
-              {/* Lista de Itens Disponíveis */}
-              <div className="border-b pb-4">
-                <AvailableItems />
               </div>
             </div>
           ) : (

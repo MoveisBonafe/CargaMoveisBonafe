@@ -262,24 +262,6 @@ const ConfigPanel = () => {
                 </div>
               </div>
             </div>
-            
-            <div>
-              <h3 className="text-lg font-medium mb-2">Ajuda de Controles</h3>
-              <div className="bg-secondary/50 p-3 rounded-md">
-                <p className="text-sm mb-2">Controles de Câmera:</p>
-                <ul className="text-xs space-y-1">
-                  <li>W/↑: Mover câmera para frente</li>
-                  <li>S/↓: Mover câmera para trás</li>
-                  <li>A/←: Mover câmera para esquerda</li>
-                  <li>D/→: Mover câmera para direita</li>
-                  <li>E: Mover câmera para cima</li>
-                  <li>Q: Mover câmera para baixo</li>
-                  <li>R: Reiniciar câmera</li>
-                  <li>Mouse: Clique e arraste para rotacionar visão</li>
-                  <li>Roda do mouse: Aproximar/afastar</li>
-                </ul>
-              </div>
-            </div>
           </div>
         </TabsContent>
         
