@@ -91,6 +91,9 @@ export const useFurnitureStore = create<FurnitureState>((set, get) => ({
     set((state) => ({
       items: [...state.items, item]
     }));
+    
+    // Salvar automaticamente no localStorage após adicionar um item
+    setTimeout(() => get().saveItemsToLocalStorage(), 0);
   },
   
   removeItem: (id: string) => {
@@ -101,6 +104,9 @@ export const useFurnitureStore = create<FurnitureState>((set, get) => ({
         (rule) => rule.item1Id !== id && rule.item2Id !== id
       )
     }));
+    
+    // Salvar automaticamente no localStorage após remover um item
+    setTimeout(() => get().saveItemsToLocalStorage(), 0);
   },
   
   updateItem: (id: string, updatedItem: Partial<FurnitureItem>) => {
@@ -113,6 +119,9 @@ export const useFurnitureStore = create<FurnitureState>((set, get) => ({
         item.id === id ? { ...item, ...updatedItem, position: item.position, rotation: item.rotation } : item
       ),
     }));
+    
+    // Salvar automaticamente no localStorage após atualizar um item
+    setTimeout(() => get().saveItemsToLocalStorage(), 0);
   },
   
   resetItems: () => {

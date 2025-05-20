@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TruckVisualization from "./TruckVisualization";
 import ConfigPanel from "./ConfigPanel";
 import ExportPanel from "./ExportPanel";
+import TruckSelector from "./TruckSelector";
+import FurnitureManager from "./FurnitureManager";
 import { Button } from "./ui/button";
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { useTruckStore } from "../lib/stores/useTruckStore";
