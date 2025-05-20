@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Truck Loading Tool</title>
-    <meta name="description" content="Furniture truck loading visualization tool with stacking restrictions and multiple viewpoints" />
+    <title>Carga Móveis Bonafé</title>
+    <meta name="description" content="Sistema de otimização de carregamento de caminhão para móveis e produtos" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <!-- Configuração base path para GitHub Pages -->
+    <script>
+      // Detecta se estamos no GitHub Pages e configura o caminho base corretamente
+      const isGitHubPages = window.location.hostname.includes('github.io');
+      window.basePath = isGitHubPages ? '/CargaMoveisBonafe/' : '/';
+      
+      // Este script ajuda a garantir que os assets sejam carregados corretamente
+      if (isGitHubPages) {
+        console.log("Executando no GitHub Pages, ajustando caminhos");
+      }
+    </script>
     <script type="module" crossorigin src="./assets/index-D5YMg0rb.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BQasS6e9.css">
   </head>

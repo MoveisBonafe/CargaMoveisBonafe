@@ -1,45 +1,38 @@
 #!/bin/bash
 
-# Script para preparar o deploy no GitHub Pages
+# Script para preparar o deploy para GitHub Pages
 
-echo "Iniciando preparação para deploy no GitHub Pages..."
+# Cores para melhorar a legibilidade
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Criar diretório docs se não existir
+echo -e "${YELLOW}Iniciando preparação para GitHub Pages...${NC}"
+
+# 1. Garantir que a pasta docs existe
 mkdir -p docs
 
-# Executar o build
+# 2. Criar arquivo .nojekyll se não existir
+if [ ! -f docs/.nojekyll ]; then
+  touch docs/.nojekyll
+  echo -e "${GREEN}Arquivo .nojekyll criado.${NC}"
+fi
+
+# 3. Construir o projeto
+echo -e "${YELLOW}Construindo o projeto...${NC}"
 npm run build
 
-# Copiar os arquivos do build para o diretório docs
-echo "Copiando arquivos do build para o diretório docs..."
+# 4. Copiar os arquivos de dist/public para docs
+echo -e "${YELLOW}Copiando arquivos para a pasta docs...${NC}"
 cp -r dist/public/* docs/
 
-# Criar um arquivo .nojekyll para evitar o processamento do Jekyll
-touch docs/.nojekyll
+# 5. Verificar se precisa atualizar o index.html
+echo -e "${YELLOW}Atualizando caminhos em index.html...${NC}"
+sed -i 's|src="/assets|src="./assets|g' docs/index.html
+sed -i 's|href="/assets|href="./assets|g' docs/index.html
 
-# Criar um arquivo index.html em docs para carregar a aplicação
-cat > docs/index.html << 'EOL'
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carga Móveis Bonafé - Otimizador de Carregamento</title>
-    <meta name="description" content="Sistema de otimização de carregamento de caminhão para móveis e produtos" />
-    <meta name="author" content="Móveis Bonafé" />
-    <script type="module" crossorigin src="./assets/index.js"></script>
-    <link rel="stylesheet" href="./assets/index.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- Carrega os scripts da aplicação -->
-    <script>
-      // Configuração para Base URL do GitHub Pages
-      window.githubPagesBasePath = '/CargaMoveisBonafe/';
-    </script>
-  </body>
-</html>
-EOL
-
-echo "Preparação concluída! Arquivos prontos para deploy no GitHub Pages."
-echo "Por favor, faça upload do conteúdo da pasta 'docs' para o seu repositório GitHub."
+echo -e "${GREEN}Preparação concluída!${NC}"
+echo -e "${YELLOW}Próximos passos:${NC}"
+echo "1. Faça commit e push dos arquivos para o GitHub"
+echo "2. Configure o GitHub Pages para usar a pasta docs/ no branch main"
+echo "3. O site estará disponível em: https://seu-usuario.github.io/CargaMoveisBonafe/"
