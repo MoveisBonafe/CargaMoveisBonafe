@@ -1,0 +1,118 @@
+Iniciando correções para GitHub Pages
+index-CFfwdjQH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-CFfwdjQH.js:4006 Itens carregados do armazenamento local.
+index-CFfwdjQH.js:4006 Regras carregadas do armazenamento local.
+index-CFfwdjQH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-CFfwdjQH.js:4006 Itens carregados do armazenamento local.
+index-CFfwdjQH.js:4006 Regras carregadas do armazenamento local.
+CargaMoveisBonafe/:50 Substituindo URL de textura por versão base64
+index-CFfwdjQH.js:3843 WebGL: INVALID_VALUE: texSubImage2D: bad image data
+ye @ index-CFfwdjQH.js:3843
+re @ index-CFfwdjQH.js:3843
+J @ index-CFfwdjQH.js:3843
+initTexture @ index-CFfwdjQH.js:3867
+(anônimo) @ index-CFfwdjQH.js:3946
+(anônimo) @ index-CFfwdjQH.js:3946
+ud @ index-CFfwdjQH.js:3897
+Ua @ index-CFfwdjQH.js:3897
+(anônimo) @ index-CFfwdjQH.js:3897
+N @ index-CFfwdjQH.js:3883
+G @ index-CFfwdjQH.js:3883
+index-CFfwdjQH.js:3946 [Violation] Added non-passive event listener to a scroll-blocking 'wheel' event. Consider marking event handler as 'passive' to make the page more responsive. See https://www.chromestatus.com/feature/5745543795965952
+M6.connect @ index-CFfwdjQH.js:3946
+(anônimo) @ index-CFfwdjQH.js:3946
+ud @ index-CFfwdjQH.js:3897
+Ua @ index-CFfwdjQH.js:3897
+(anônimo) @ index-CFfwdjQH.js:3897
+N @ index-CFfwdjQH.js:3883
+G @ index-CFfwdjQH.js:3883
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.75, 2.1, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7492235509359153, 2.1, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7484471018718306, 2.1, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.747670652807746, 2.1, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.747670652807746, 2.100776449064085, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7468942037436612, 2.100776449064085, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7461177546795765, 2.100776449064085, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7453413056154918, 2.100776449064085, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7445648565514071, 2.100776449064085, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7445648565514071, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7437884074873224, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7430119584232378, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.742235509359153, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7414590602950684, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7406826112309837, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.739906162166899, 2.1015528981281695, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7391297131028143, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7383532640387296, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.737576814974645, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7368003659105602, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7360239168464755, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7352474677823908, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7344710187183061, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7336945696542214, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7329181205901367, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.732141671526052, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7313652224619673, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7305887733978826, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.729812324333798, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7290358752697133, 2.102329347192254, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7290358752697133, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7282594262056286, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7274829771415439, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7267065280774592, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7259300790133745, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7251536299492898, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.724377180885205, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7236007318211204, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7228242827570357, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.722047833692951, 2.103105796256339, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.722047833692951, 2.1038822453204236, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7204949355647816, 2.1038822453204236, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.719718486500697, 2.1038822453204236, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7181655883725275, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7166126902443581, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7158362411802734, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.714283343052104, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7127304449239347, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.71195399585985, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7104010977316806, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7088481996035112, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7072953014753418, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7065188524112571, 2.1046586943845083, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7049659542830877, 2.105435143448593, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7049659542830877, 2.105435143448593, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7034130561549183, 2.105435143448593, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.701860158026749, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.7010837089626643, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6995308108344949, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6987543617704102, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6964250145781559, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6956485655140712, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6940956673859018, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.693319218321817, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6917663201936477, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.690989871129563, 2.1062115925126776, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6894369730013936, 2.1069880415767623, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6878840748732242, 2.1069880415767623, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6871076258091395, 2.1069880415767623, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6863311767450548, 2.1069880415767623, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6855547276809701, 2.107764490640847, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6847782786168854, 2.107764490640847, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.683225380488716, 2.107764490640847, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6816724823605467, 2.107764490640847, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.680896033296462, 2.107764490640847, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6801195842323773, 2.1085409397049317, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6793431351682926, 2.1085409397049317, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.678566686104208, 2.1093173887690164, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6777902370401232, 2.1093173887690164, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6770137879760385, 2.1093173887690164, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6762373389119538, 2.1093173887690164, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6762373389119538, 2.110093837833101, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6754608898478691, 2.110093837833101, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6746844407837844, 2.110093837833101, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6746844407837844, 2.110870286897186, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6739079917196997, 2.110870286897186, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.673131542655615, 2.110870286897186, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6723550935915303, 2.110870286897186, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6723550935915303, 2.1116467359612705, 0]
+index-CFfwdjQH.js:4006 Movendo painel (3) [-1.6715786445274456, 2.1116467359612705, 0]
