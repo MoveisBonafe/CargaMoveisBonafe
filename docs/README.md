@@ -1,22 +1,34 @@
 # Carga Móveis Bonafé
 
-Este é o sistema de otimização de carregamento de caminhões para a Móveis Bonafé.
+Aplicativo para otimização de carregamento de caminhão para a empresa Móveis Bonafé.
 
-A aplicação permite visualizar o carregamento do caminhão em 3D, adicionar e editar itens, 
-salvar produtos localmente e realizar o posicionamento automático dos itens.
+## Instruções para Deploy
 
-## Principais funcionalidades
+Para atualizar este site no GitHub Pages:
 
-- Visualização 3D do carregamento do caminhão
-- Cadastro de produtos com código, nome, dimensões e peso
-- Posicionamento automático dos itens no caminhão
-- Exportação e importação de configurações de carga
-- Verificação de limites de peso e empilhamento
-- Interface em português brasileiro
+1. Execute o script `./prepare-github-pages.sh`
+2. Faça commit e push das mudanças para o GitHub
+3. Configure o GitHub Pages para usar a pasta `docs/` no branch main
 
-## Tecnologias utilizadas
+## Características
 
-- React
-- Three.js / React Three Fiber
+- Visualização 3D do caminhão e da carga
+- Gerenciamento de diferentes tipos de caminhão
+- Cadastro e gerenciamento de móveis
+- Visualização da lista de itens disponíveis
+- Salvamento automático de configurações
+
+## Instruções de Uso
+
+1. Selecione um tipo de caminhão ou cadastre um novo
+2. Adicione ou gerencie os móveis
+3. Organize os móveis no caminhão
+4. Use as ferramentas de exportação quando terminar
+
+## Desenvolvimento
+
+Este projeto foi desenvolvido usando:
+- React 
 - TypeScript
+- Three.js (via React Three Fiber)
 - Tailwind CSS

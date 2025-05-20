@@ -22,17 +22,27 @@ fi
 echo -e "${YELLOW}Construindo o projeto...${NC}"
 npm run build
 
-# 4. Copiar os arquivos de dist/public para docs
+# 4. Limpar a pasta docs (mantendo apenas alguns arquivos especiais)
+echo -e "${YELLOW}Limpando a pasta docs...${NC}"
+find docs -type f -not -name ".nojekyll" -not -name "404.html" -not -name ".github-pages-fix.js" -delete
+find docs -type d -not -path "docs" -empty -delete
+
+# 5. Copiar os arquivos de dist/public para docs
 echo -e "${YELLOW}Copiando arquivos para a pasta docs...${NC}"
 cp -r dist/public/* docs/
 
-# 5. Verificar se precisa atualizar o index.html
+# 6. Verificar se precisa atualizar o index.html
 echo -e "${YELLOW}Atualizando caminhos em index.html...${NC}"
 sed -i 's|src="/assets|src="./assets|g' docs/index.html
 sed -i 's|href="/assets|href="./assets|g' docs/index.html
+
+# 7. Garantir que o script de correção de caminho está presente
+if [ ! -f docs/.github-pages-fix.js ]; then
+  echo -e "${YELLOW}AVISO: Arquivo .github-pages-fix.js não encontrado em docs/. Verifique se ele existe.${NC}"
+fi
 
 echo -e "${GREEN}Preparação concluída!${NC}"
 echo -e "${YELLOW}Próximos passos:${NC}"
 echo "1. Faça commit e push dos arquivos para o GitHub"
 echo "2. Configure o GitHub Pages para usar a pasta docs/ no branch main"
-echo "3. O site estará disponível em: https://seu-usuario.github.io/CargaMoveisBonafe/"
+echo "3. O site estará disponível em: https://moveisbonafe.github.io/CargaMoveisBonafe/"
