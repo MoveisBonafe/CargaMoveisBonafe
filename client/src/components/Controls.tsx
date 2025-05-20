@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Html } from "@react-three/drei";
 import { FurnitureItem, FurnitureItemPosition } from "../types";
 import { useTruckStore } from "../lib/stores/useTruckStore";
 import { cn } from "../lib/utils";
-import { useThree } from "@react-three/fiber";
 
 interface ControlsProps {
   items: FurnitureItem[];
@@ -128,15 +126,14 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   };
   
   return (
-    <Html position={[position[0], position[1], position[2]]}>
-      <div 
-        ref={panelRef}
-        className={cn(
-          "bg-card border border-border rounded-md shadow-lg transition-all duration-300",
-          isExpanded ? "w-64" : "w-10",
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        )}
-      >
+    <div 
+      ref={panelRef}
+      className={cn(
+        "absolute top-4 left-4 bg-card border border-border rounded-md shadow-lg transition-all duration-300",
+        isExpanded ? "w-64" : "w-10",
+        isDragging ? "cursor-grabbing" : "cursor-grab"
+      )}
+    >
         <div 
           className="flex items-center justify-between p-2 border-b border-border cursor-move bg-secondary/20"
           onMouseDown={handleMouseDown}

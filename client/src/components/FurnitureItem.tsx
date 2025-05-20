@@ -164,21 +164,12 @@ const FurnitureItem = ({
         </mesh>
       )}
       
-      {/* Item label */}
-      <Html
-        position={[item.position.x, item.position.y + item.height / 2 + 0.2, item.position.z]}
-        center
-        distanceFactor={10}
-      >
-        <div className="bg-black/70 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-          {item.name}
-        </div>
-      </Html>
+      {/* Item label - Using Three.js text */}
+      {/* Labels removidos para evitar conflitos de renderização com HTML */}
     </group>
   );
 };
 
-// Import Html component
-import { Html } from "@react-three/drei";
+// Removendo importação desnecessária
 
 export default FurnitureItem;
