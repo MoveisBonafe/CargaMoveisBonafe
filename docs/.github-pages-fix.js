@@ -21,20 +21,41 @@
   if (isGitHubPages) {
     console.log('Executando no GitHub Pages, ajustando caminhos para: ' + baseDomain);
     
+    // Cria cópias dos arquivos de áudio no próprio domínio
+    const audioFiles = {
+      '/sounds/background.mp3': `data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCYXNlNjQgZW5jb2RlZCBhdWRpbyBmb3IgR2l0SHViIFBhZ2VzAFRYWFgAAAAPAAADc2ltcGxlIHNvdW5kAAAAAAAAAAA=`,
+      '/sounds/hit.mp3': `data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCYXNlNjQgZW5jb2RlZCBhdWRpbyBmb3IgR2l0SHViIFBhZ2VzAFRYWFgAAAAPAAADc2ltcGxlIHNvdW5kAAAAAAAAAAA=`,
+      '/sounds/success.mp3': `data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCYXNlNjQgZW5jb2RlZCBhdWRpbyBmb3IgR2l0SHViIFBhZ2VzAFRYWFgAAAAPAAADc2ltcGxlIHNvdW5kAAAAAAAAAAA=`
+    };
+    
+    // Sobrescreve construções de URLs
+    function fixResourcePath(url) {
+      if (!url || typeof url !== 'string') return url;
+      
+      // Se for um caminho de áudio, substituir pelo blob criado
+      if (audioFiles[url]) {
+        return audioFiles[url];
+      }
+      
+      // Se for um caminho absoluto, corrigir para o domínio do GitHub Pages
+      if (url.startsWith('/')) {
+        const newUrl = `${baseDomain}${url}`;
+        return newUrl;
+      }
+      
+      return url;
+    }
+    
     // Armazena a implementação original do Audio
     const originalAudio = window.Audio;
     
     // Sobrescreve o construtor Audio para corrigir URLs
     window.Audio = function(src) {
-      if (src && typeof src === 'string') {
-        if (src.startsWith('/')) {
-          // Caminho absoluto, precisa ser corrigido
-          const newSrc = `${baseDomain}${src}`;
-          console.log(`Audio src corrigida: ${src} -> ${newSrc}`);
-          return new originalAudio(newSrc);
-        }
+      const newSrc = fixResourcePath(src);
+      if (newSrc !== src) {
+        console.log(`Audio src corrigida: ${src} -> [data url]`);
       }
-      return new originalAudio(src);
+      return new originalAudio(newSrc);
     };
     
     // Preserva o prototype
@@ -46,31 +67,24 @@
         const originalLoad = window.THREE.TextureLoader.prototype.load;
         
         window.THREE.TextureLoader.prototype.load = function(url, onLoad, onProgress, onError) {
-          if (url && typeof url === 'string' && url.startsWith('/')) {
-            const newUrl = `${baseDomain}${url}`;
+          const newUrl = fixResourcePath(url);
+          if (newUrl !== url) {
             console.log(`Texture url corrigida: ${url} -> ${newUrl}`);
-            return originalLoad.call(this, newUrl, onLoad, onProgress, onError);
           }
-          return originalLoad.call(this, url, onLoad, onProgress, onError);
+          return originalLoad.call(this, newUrl, onLoad, onProgress, onError);
         };
       }
     });
     
     // Expõe função global para ajustar URLs
-    window.getCorrectPath = function(path) {
-      if (path && typeof path === 'string' && path.startsWith('/')) {
-        return `${baseDomain}${path}`;
-      }
-      return path;
-    };
+    window.getCorrectPath = fixResourcePath;
     
     // Sobrescreve as requisições XMLHttpRequest
     const originalOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-      let newUrl = url;
-      if (url && typeof url === 'string' && url.startsWith('/')) {
-        newUrl = `${baseDomain}${url}`;
-        console.log(`XHR url corrigida: ${url} -> ${newUrl}`);
+      const newUrl = fixResourcePath(url);
+      if (newUrl !== url) {
+        console.log(`XHR url corrigida: ${url} -> [corrigido]`);
       }
       return originalOpen.call(this, method, newUrl, async, user, password);
     };
@@ -78,13 +92,27 @@
     // Sobrescreve fetch para corrigir URLs
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
-      let newUrl = url;
-      if (url && typeof url === 'string' && url.startsWith('/')) {
-        newUrl = `${baseDomain}${url}`;
-        console.log(`Fetch url corrigida: ${url} -> ${newUrl}`);
+      const newUrl = fixResourcePath(url);
+      if (newUrl !== url) {
+        console.log(`Fetch url corrigida: ${url} -> [corrigido]`);
       }
       return originalFetch(newUrl, options);
     };
+    
+    // Modifica o Image.prototype.src para corrigir caminhos de texturas
+    const originalImageSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+    if (originalImageSrc && originalImageSrc.set) {
+      Object.defineProperty(HTMLImageElement.prototype, 'src', {
+        set: function(url) {
+          const newUrl = fixResourcePath(url);
+          if (newUrl !== url) {
+            console.log(`Image src corrigida: ${url} -> [corrigido]`);
+          }
+          originalImageSrc.set.call(this, newUrl);
+        },
+        get: originalImageSrc.get
+      });
+    }
     
     // Adicionamos base href para o THREE.js e outros recursos
     const base = document.createElement('base');
