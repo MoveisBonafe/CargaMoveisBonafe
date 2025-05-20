@@ -46,11 +46,13 @@ const TruckLoader = () => {
         <TruckVisualization selectedItemId={selectedItem} />
         
         {/* Painel de controle flutuante (fora do contexto Three.js) */}
+        {/* Modificar a forma como o painel de controle é exibido no GitHub Pages */}
         <Controls 
           items={items}
           placedItems={placedItems}
           onDragStart={handleDragStart}
           selectedItem={selectedItem}
+          isGitHubPages={window.location.hostname.includes('github.io')}
         />
       </div>
 

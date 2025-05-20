@@ -8,6 +8,7 @@ interface ControlsProps {
   placedItems: FurnitureItemPosition[];
   onDragStart: (itemId: string) => void;
   selectedItem: string | null;
+  isGitHubPages?: boolean;
 }
 
 /**
@@ -15,7 +16,7 @@ interface ControlsProps {
  * Este componente foi redesenhado para funcionar como um componente React regular
  * evitando problemas de renderização com o React Three Fiber
  */
-const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsProps) => {
+const Controls = ({ items, placedItems, onDragStart, selectedItem, isGitHubPages = false }: ControlsProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { truckDimensions, currentWeight } = useTruckStore();
   
@@ -125,6 +126,11 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
       onDragStart(itemId);
     }
   };
+  
+  // Se estiver no GitHub Pages, não mostrar o painel flutuante
+  if (isGitHubPages) {
+    return null;
+  }
   
   return (
     <div 
