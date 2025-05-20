@@ -1,0 +1,93 @@
+GitHub Pages path fixer iniciado
+.github-pages-fix.js:34 Executando no GitHub Pages, ajustando caminhos para: https://moveisbonafe.github.io/CargaMoveisBonafe
+.github-pages-fix.js:200 Patches para GitHub Pages aplicados com sucesso!
+texture-patch.js:7 Texture patch iniciado
+.github-pages-fix.js:46 Texturas base64 pré-carregadas com sucesso
+texture-patch.js:18 Imagem da textura de madeira carregada com sucesso
+texture-patch.js:69 THREE.js ainda não disponível, aguardando...
+index-CFfwdjQH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-CFfwdjQH.js:4006 Itens carregados do armazenamento local.
+index-CFfwdjQH.js:4006 Regras carregadas do armazenamento local.
+index-CFfwdjQH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-CFfwdjQH.js:4006 Itens carregados do armazenamento local.
+index-CFfwdjQH.js:4006 Regras carregadas do armazenamento local.
+.github-pages-fix.js:128 Audio src corrigida: /CargaMoveisBonafe/sounds/background.mp3 -> https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/background.mp3
+.github-pages-fix.js:128 Audio src corrigida: /CargaMoveisBonafe/sounds/hit.mp3 -> https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/hit.mp3
+.github-pages-fix.js:128 Audio src corrigida: /CargaMoveisBonafe/sounds/success.mp3 -> https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/success.mp3
+CargaMoveisBonafe/:20 
+            
+            
+           GET https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/success.mp3 net::ERR_ABORTED 404 (Not Found)
+CargaMoveisBonafe/:20 
+            
+            
+           GET https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/background.mp3 net::ERR_ABORTED 404 (Not Found)
+CargaMoveisBonafe/:20 
+            
+            
+           GET https://moveisbonafe.github.io/CargaMoveisBonafe/CargaMoveisBonafe/sounds/hit.mp3 404 (Not Found)
+texture-patch.js:69 THREE.js ainda não disponível, aguardando...
+wood.jpg:1 
+            
+            
+           GET https://moveisbonafe.github.io/CargaMoveisBonafetextures/wood.jpg 404 (Not Found)
+Image
+set @ .github-pages-fix.js:158
+load @ index-CFfwdjQH.js:3867
+load @ index-CFfwdjQH.js:3867
+(anônimo) @ index-CFfwdjQH.js:3909
+(anônimo) @ index-CFfwdjQH.js:3909
+(anônimo) @ index-CFfwdjQH.js:3909
+wN @ index-CFfwdjQH.js:3875
+cG @ index-CFfwdjQH.js:3875
+_h @ index-CFfwdjQH.js:3909
+j1 @ index-CFfwdjQH.js:3946
+p8 @ index-CFfwdjQH.js:4006
+uy @ index-CFfwdjQH.js:3895
+GE @ index-CFfwdjQH.js:3897
+BE @ index-CFfwdjQH.js:3897
+WD @ index-CFfwdjQH.js:3897
+Sp @ index-CFfwdjQH.js:3897
+OE @ index-CFfwdjQH.js:3897
+N @ index-CFfwdjQH.js:3883
+G @ index-CFfwdjQH.js:3883
+texture-patch.js:62 Error: Could not load https://moveisbonafe.github.io/CargaMoveisBonafetextures/wood.jpg: undefined
+    at index-CFfwdjQH.js:3909:24610
+    at HTMLImageElement.d (index-CFfwdjQH.js:3867:171417)
+console.error @ texture-patch.js:62
+console.error @ index-CFfwdjQH.js:3909
+gy @ index-CFfwdjQH.js:3897
+I.componentDidCatch.v.callback @ index-CFfwdjQH.js:3897
+bM @ index-CFfwdjQH.js:3895
+IE @ index-CFfwdjQH.js:3897
+RE @ index-CFfwdjQH.js:3897
+BD @ index-CFfwdjQH.js:3897
+jD @ index-CFfwdjQH.js:3897
+ka @ index-CFfwdjQH.js:3897
+OE @ index-CFfwdjQH.js:3897
+N @ index-CFfwdjQH.js:3883
+G @ index-CFfwdjQH.js:3883
+texture-patch.js:62 Error: Could not load https://moveisbonafe.github.io/CargaMoveisBonafetextures/wood.jpg: undefined
+    at index-CFfwdjQH.js:3909:24610
+    at HTMLImageElement.d (index-CFfwdjQH.js:3867:171417)
+console.error @ texture-patch.js:62
+console.error @ index-CFfwdjQH.js:3909
+aS @ index-CFfwdjQH.js:40
+t.callback @ index-CFfwdjQH.js:40
+kb @ index-CFfwdjQH.js:38
+Qb @ index-CFfwdjQH.js:40
+e2 @ index-CFfwdjQH.js:40
+dU @ index-CFfwdjQH.js:40
+gU @ index-CFfwdjQH.js:40
+Ja @ index-CFfwdjQH.js:40
+t2 @ index-CFfwdjQH.js:40
+N @ index-CFfwdjQH.js:25
+G @ index-CFfwdjQH.js:25
+index-CFfwdjQH.js:3909 Uncaught Error: Could not load https://moveisbonafe.github.io/CargaMoveisBonafetextures/wood.jpg: undefined
+    at index-CFfwdjQH.js:3909:24610
+    at HTMLImageElement.d (index-CFfwdjQH.js:3867:171417)
+(anônimo) @ index-CFfwdjQH.js:3909
+d @ index-CFfwdjQH.js:3867
+4texture-patch.js:69 THREE.js ainda não disponível, aguardando...
+index-CFfwdjQH.js:3867 THREE.WebGLRenderer: Context Lost.
+184texture-patch.js:69 THREE.js ainda não disponível, aguardando...

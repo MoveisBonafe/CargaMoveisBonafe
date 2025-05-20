@@ -57,13 +57,27 @@
       
       // Se for um caminho de áudio, substituir pelo blob criado
       if (audioFiles[url]) {
+        console.log(`Usando áudio embutido para: ${url}`);
         return audioFiles[url];
+      }
+      
+      // Corrigir caminhos duplicados para áudio
+      if (url.includes('/CargaMoveisBonafe/CargaMoveisBonafe/')) {
+        const fixedUrl = url.replace('/CargaMoveisBonafe/CargaMoveisBonafe/', '/CargaMoveisBonafe/');
+        console.log(`Corrigindo caminho duplicado: ${url} -> ${fixedUrl}`);
+        return fixedUrl;
       }
       
       // Se for um caminho absoluto, corrigir para o domínio do GitHub Pages
       if (url.startsWith('/')) {
         // Se for textura ou som, tentar corrigir especificamente
         if (url.includes('/textures/') || url.includes('/sounds/')) {
+          // Caso especial para wood.jpg - retornar versão base64
+          if (url.includes('/textures/wood.jpg')) {
+            // Retornar a textura base64 diretamente
+            return textureBase64Data[url] || url;
+          }
+          
           const baseName = url.split('/').pop();
           return `${baseDomain}/${url.substring(1)}`;
         }
