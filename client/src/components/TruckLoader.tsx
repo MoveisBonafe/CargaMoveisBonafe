@@ -4,6 +4,7 @@ import ConfigPanel from "./ConfigPanel";
 import ExportPanel from "./ExportPanel";
 import TruckSelector from "./TruckSelector";
 import FurnitureManager from "./FurnitureManager";
+import AvailableItems from "./AvailableItems";
 import { Button } from "./ui/button";
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { useTruckStore } from "../lib/stores/useTruckStore";
@@ -67,10 +68,9 @@ const TruckLoader = () => {
                 <FurnitureManager />
               </div>
               
-              {/* Painel de Configuração Original */}
-              <div>
-                <h2 className="text-xl font-semibold mb-3">Configurações Avançadas</h2>
-                <ConfigPanel />
+              {/* Lista de Itens Disponíveis */}
+              <div className="border-b pb-4">
+                <AvailableItems />
               </div>
             </div>
           ) : (
