@@ -59,8 +59,22 @@ const TruckLoader = () => {
           <h2 className="text-lg font-semibold mb-2 flex items-center">
             Itens Disponíveis
           </h2>
-          <div className="h-[150px]">
-            <AvailableItems />
+          <div className="h-[120px]">
+            <AvailableItems onItemSelect={(item) => {
+              // Adicionar o item diretamente quando selecionado
+              const { placedItems, setPlacedItems } = useFurnitureStore.getState();
+              const { truckDimensions, addWeight } = useTruckStore.getState();
+              
+              // Posição padrão no centro do caminhão
+              const newItem: FurnitureItemPosition = {
+                ...item,
+                position: { x: 0, y: item.height/2, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 }
+              };
+              
+              setPlacedItems([...placedItems, newItem]);
+              addWeight(item.weight);
+            }} />
           </div>
         </div>
         

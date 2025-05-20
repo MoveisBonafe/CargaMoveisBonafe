@@ -1,4 +1,4 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useState, useRef, useCallback, useEffect } from "react";
 import { 
   OrbitControls, 
@@ -14,7 +14,6 @@ import { Controls as ControlsType, FurnitureItemPosition } from "../types";
 import FurnitureItem from "./FurnitureItem";
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { useTruckStore } from "../lib/stores/useTruckStore";
-import ControlsPanel from "./Controls";
 import { useAudio } from "../lib/stores/useAudio";
 
 // Helper function to check collisions between two items
@@ -97,7 +96,7 @@ const Truck = () => {
   );
 };
 
-// Main visualization component
+// Component for Three.js visualization only - No UI elements allowed here
 const TruckVisualization = () => {
   const { items, placedItems, setPlacedItems, getStackingRules, resetPlacedItems } = useFurnitureStore();
   const { 
@@ -584,49 +583,7 @@ const TruckVisualization = () => {
           />
         )}
         
-        {/* Controles de otimização automática */}
-        <div className="absolute top-4 right-4 bg-background p-3 rounded-lg border shadow-md">
-          <h3 className="text-sm font-medium mb-2">Ajuste Automático</h3>
-          <div className="space-y-2">
-            <button 
-              className="w-full px-3 py-2 text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
-              onClick={() => {
-                // Implementar otimização por peso
-                optimizeByWeight();
-              }}
-            >
-              Distribuir por Peso
-            </button>
-            <button 
-              className="w-full px-3 py-2 text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
-              onClick={() => {
-                // Implementar otimização por espaço
-                optimizeBySpace();
-              }}
-            >
-              Distribuir por Espaço
-            </button>
-            <button 
-              className="w-full px-3 py-2 text-xs bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-md"
-              onClick={() => {
-                // Resetar configuração
-                if (window.confirm("Tem certeza que deseja resetar a configuração? Todos os itens serão removidos do caminhão.")) {
-                  resetConfiguration();
-                }
-              }}
-            >
-              Resetar Caminhão
-            </button>
-          </div>
-        </div>
-        
-        {/* Controls panel for item selection */}
-        <ControlsPanel 
-          items={items} 
-          placedItems={placedItems} 
-          onDragStart={handleDragStart} 
-          selectedItem={selectedItem}
-        />
+        {/* Todos os controles foram movidos para o TruckLoader */}
         
         <OrbitControls 
           makeDefault 
