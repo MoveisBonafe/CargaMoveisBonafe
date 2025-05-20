@@ -455,7 +455,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
     
     for (const placedItem of sortedItems) {
       // Skip if it's the same item
-      if (placedItem.id === selectedItem) continue;
+      if (placedItem.id === selectedItemId) continue;
       
       // Create temporary placement to check collision at current height
       const tempPlacement = { ...newPlacement };
@@ -488,7 +488,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
     // Check collision with other items
     let hasCollision = false;
     for (const placedItem of placedItems) {
-      if (placedItem.id === selectedItem) continue;
+      if (placedItem.id === selectedItemId) continue;
       
       if (checkCollision(newPlacement, placedItem)) {
         hasCollision = true;
@@ -507,7 +507,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
       if (itemAlreadyPlaced) {
         // Se é um ajuste de posição, atualize a posição do item existente
         const updatedItems = placedItems.map(item => 
-          item.id === selectedItem ? newPlacement : item
+          item.id === selectedItemId ? newPlacement : item
         );
         setPlacedItems(updatedItems);
       } else {
@@ -519,7 +519,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
       }
       
       setDraggedItem(null);
-      setSelectedItem(null);
+      // setSelectedItem(null);
       playSuccess();
     } else {
       // If collision, play error sound
