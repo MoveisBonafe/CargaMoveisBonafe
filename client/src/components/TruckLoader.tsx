@@ -30,7 +30,7 @@ const TruckLoader = () => {
   };
 
   // Estados e funções para o controle de itens
-  const { items, placedItems, getItemById } = useFurnitureStore();
+  const { items, placedItems } = useFurnitureStore();
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   
   // Função para iniciar o arrasto de um item

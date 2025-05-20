@@ -97,7 +97,11 @@ const Truck = () => {
 };
 
 // Component for Three.js visualization only - No UI elements allowed here
-const TruckVisualization = () => {
+interface TruckVisualizationProps {
+  selectedItemId?: string | null;
+}
+
+const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
   const { items, placedItems, setPlacedItems, getStackingRules, resetPlacedItems } = useFurnitureStore();
   const { 
     truckDimensions, 
@@ -106,7 +110,7 @@ const TruckVisualization = () => {
     removeWeight, 
     resetWeight 
   } = useTruckStore();
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  // Usamos a prop selectedItemId em vez do estado interno
   const [draggedItem, setDraggedItem] = useState<FurnitureItemPosition | null>(null);
   const { playHit, playSuccess } = useAudio.getState();
   
@@ -397,9 +401,9 @@ const TruckVisualization = () => {
   
   // Function to handle item placement
   const handlePlacement = (position: THREE.Vector3) => {
-    if (!draggedItem || !selectedItem) return;
+    if (!draggedItem || !selectedItemId) return;
     
-    const itemData = items.find(item => item.id === selectedItem);
+    const itemData = items.find(item => item.id === selectedItemId);
     if (!itemData) return;
     
     // Verificar se o item já estava colocado (ajuste fino)
