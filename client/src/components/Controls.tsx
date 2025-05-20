@@ -10,13 +10,17 @@ interface ControlsProps {
   selectedItem: string | null;
 }
 
+/**
+ * Componente de controle independente (fora do contexto Three.js)
+ * Este componente foi redesenhado para funcionar como um componente React regular
+ * evitando problemas de renderização com o React Three Fiber
+ */
 const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { truckDimensions, currentWeight } = useTruckStore();
-  const { size, viewport } = useThree();
   
-  // Estado para controlar a posição da legenda
-  const [position, setPosition] = useState<[number, number, number]>([truckDimensions.width / 2 - 3, truckDimensions.height / 2 + 1, 0]);
+  // Estado para controlar a posição do painel
+  const [position, setPosition] = useState({ x: 20, y: 20 });
   
   // Estado para controlar o arrasto da legenda
   const [isDragging, setIsDragging] = useState(false);
@@ -84,18 +88,15 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && panelRef.current) {
-        const deltaX = (e.clientX - dragStartPos.current.x) / viewport.factor;
-        const deltaY = (e.clientY - dragStartPos.current.y) / viewport.factor;
+        const deltaX = e.clientX - dragStartPos.current.x;
+        const deltaY = e.clientY - dragStartPos.current.y;
         
-        // Aumentei a sensibilidade do movimento para 0.05 (era 0.01)
-        setPosition([
-          position[0] + deltaX * 0.05,
-          position[1] - deltaY * 0.05,
-          position[2]
-        ]);
+        setPosition({
+          x: position.x + deltaX,
+          y: position.y + deltaY
+        });
         
         dragStartPos.current = { x: e.clientX, y: e.clientY };
-        console.log("Movendo painel", position);
       }
     };
     
@@ -110,7 +111,7 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, position, viewport.factor]);
+  }, [isDragging, position]);
   
   // Função para adicionar múltiplos itens de uma vez
   const handleAddMultipleItems = (itemId: string) => {
@@ -129,157 +130,161 @@ const Controls = ({ items, placedItems, onDragStart, selectedItem }: ControlsPro
     <div 
       ref={panelRef}
       className={cn(
-        "absolute top-4 left-4 bg-card border border-border rounded-md shadow-lg transition-all duration-300",
+        "fixed bg-card border border-border rounded-md shadow-lg transition-all duration-300",
         isExpanded ? "w-64" : "w-10",
         isDragging ? "cursor-grabbing" : "cursor-grab"
       )}
+      style={{ 
+        top: `${position.y}px`, 
+        left: `${position.x}px`,
+        zIndex: 100 
+      }}
     >
-        <div 
-          className="flex items-center justify-between p-2 border-b border-border cursor-move bg-secondary/20"
-          onMouseDown={handleMouseDown}
-        >
-          <h3 className={cn("font-medium", !isExpanded && "hidden")}>Itens Disponíveis</h3>
-          <div className="flex gap-1">
-            <span className="text-xs text-muted-foreground">{isDragging ? "Movendo..." : "Arraste aqui"}</span>
-            <button
-              className="p-1 rounded-md hover:bg-secondary/50"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? "←" : "→"}
-            </button>
-          </div>
+      <div 
+        className="flex items-center justify-between p-2 border-b border-border cursor-move bg-secondary/20"
+        onMouseDown={handleMouseDown}
+      >
+        <h3 className={cn("font-medium", !isExpanded && "hidden")}>Itens Disponíveis</h3>
+        <div className="flex gap-1">
+          <span className="text-xs text-muted-foreground">{isDragging ? "Movendo..." : "Arraste aqui"}</span>
+          <button
+            className="p-1 rounded-md hover:bg-secondary/50"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? "←" : "→"}
+          </button>
         </div>
-        
-        {isExpanded && (
-          <>
-            <div className="p-3 border-b border-border space-y-3">
-              {/* Volume usage */}
-              <div>
-                <div className="mb-1 flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Uso do Volume do Caminhão</span>
-                  <span className="text-xs font-medium">
-                    {volumeStats.percentage.toFixed(1)}%
-                  </span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full">
-                  <div 
-                    className="bg-primary h-2 rounded-full"
-                    style={{ width: `${Math.min(volumeStats.percentage, 100)}%` }}
-                  />
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} unidades cúbicas
-                </div>
+      </div>
+      
+      {isExpanded && (
+        <>
+          <div className="p-3 border-b border-border space-y-3">
+            {/* Volume usage */}
+            <div>
+              <div className="mb-1 flex justify-between items-center">
+                <span className="text-xs text-muted-foreground">Uso do Volume do Caminhão</span>
+                <span className="text-xs font-medium">
+                  {volumeStats.percentage.toFixed(1)}%
+                </span>
               </div>
-              
-              {/* Weight usage */}
-              <div>
-                <div className="mb-1 flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Uso do Peso do Caminhão</span>
-                  <span className="text-xs font-medium">
-                    {weightStats.percentage.toFixed(1)}%
-                  </span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full">
-                  <div 
-                    className={cn(
-                      "h-2 rounded-full",
-                      weightStats.percentage > 90 ? "bg-destructive" : "bg-primary"
-                    )}
-                    style={{ width: `${Math.min(weightStats.percentage, 100)}%` }}
-                  />
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {weightStats.used.toFixed(0)} / {weightStats.total.toFixed(0)} kg
-                </div>
+              <div className="w-full bg-secondary h-2 rounded-full">
+                <div 
+                  className="bg-primary h-2 rounded-full"
+                  style={{ width: `${Math.min(volumeStats.percentage, 100)}%` }}
+                />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {volumeStats.used.toFixed(2)} / {volumeStats.total.toFixed(2)} unidades cúbicas
               </div>
             </div>
             
-            <div className="p-2 max-h-[400px] overflow-y-auto custom-scrollbar">
-              {items.length === 0 ? (
-                <div className="text-sm text-muted-foreground p-2 text-center">
-                  Nenhum item disponível. Adicione alguns no painel de configuração.
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {items.map((item) => {
-                    const isPlaced = placedItemIds.includes(item.id);
-                    
-                    return (
-                      <div
-                        key={item.id}
-                        className={cn(
-                          "p-2 rounded-md cursor-pointer transition-colors duration-150",
-                          isPlaced 
-                            ? "bg-secondary/30 border border-muted" 
-                            : "bg-secondary hover:bg-secondary/70 border border-transparent",
-                          selectedItem === item.id && "ring-2 ring-primary"
-                        )}
-                        onClick={() => onDragStart(item.id)}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: item.color }}
-                          />
-                          <span className="font-medium text-sm">{item.name}</span>
+            {/* Weight usage */}
+            <div>
+              <div className="mb-1 flex justify-between items-center">
+                <span className="text-xs text-muted-foreground">Uso do Peso do Caminhão</span>
+                <span className="text-xs font-medium">
+                  {weightStats.percentage.toFixed(1)}%
+                </span>
+              </div>
+              <div className="w-full bg-secondary h-2 rounded-full">
+                <div 
+                  className={cn(
+                    "h-2 rounded-full",
+                    weightStats.percentage > 90 ? "bg-destructive" : "bg-primary"
+                  )}
+                  style={{ width: `${Math.min(weightStats.percentage, 100)}%` }}
+                />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {weightStats.used.toFixed(0)} / {weightStats.total.toFixed(0)} kg
+              </div>
+            </div>
+          </div>
+          
+          <div className="p-2 max-h-[400px] overflow-y-auto custom-scrollbar">
+            {items.length === 0 ? (
+              <div className="text-sm text-muted-foreground p-2 text-center">
+                Nenhum item disponível. Adicione alguns no painel de configuração.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {items.map((item) => {
+                  const isPlaced = placedItemIds.includes(item.id);
+                  
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        "p-2 rounded-md cursor-pointer transition-colors duration-150",
+                        isPlaced 
+                          ? "bg-secondary/30 border border-muted" 
+                          : "bg-secondary hover:bg-secondary/70 border border-transparent",
+                        selectedItem === item.id && "ring-2 ring-primary"
+                      )}
+                      onClick={() => onDragStart(item.id)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span className="font-medium text-sm">{item.name}</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-1 mt-1">
+                        <div className="text-xs text-muted-foreground">
+                          L: {item.width}
                         </div>
-                        <div className="grid grid-cols-3 gap-1 mt-1">
-                          <div className="text-xs text-muted-foreground">
-                            L: {item.width}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            A: {item.height}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            P: {item.depth}
-                          </div>
+                        <div className="text-xs text-muted-foreground">
+                          A: {item.height}
                         </div>
-                        <div className="mt-1 text-xs">
-                          {isPlaced ? (
-                            <span className="text-muted-foreground">Colocado (clique para mover)</span>
-                          ) : (
-                            <div className="flex flex-col gap-1">
-                              <span className="text-primary">Disponível</span>
-                              <div className="flex gap-1 items-center mt-1">
-                                <input
-                                  type="number"
-                                  min="1"
-                                  max="10"
-                                  className="w-12 h-6 text-xs p-1 border border-border rounded bg-background"
-                                  value={itemQuantities[item.id] || 1}
-                                  onChange={(e) => {
-                                    const val = parseInt(e.target.value) || 1;
-                                    setItemQuantities(prev => ({
-                                      ...prev,
-                                      [item.id]: Math.max(1, Math.min(10, val))
-                                    }));
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                                <button
-                                  className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded flex-grow"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAddMultipleItems(item.id);
-                                  }}
-                                >
-                                  Adicionar {itemQuantities[item.id] || 1}x
-                                </button>
-                              </div>
-                            </div>
-                          )}
+                        <div className="text-xs text-muted-foreground">
+                          P: {item.depth}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </Html>
+                      <div className="mt-1 text-xs">
+                        {isPlaced ? (
+                          <span className="text-muted-foreground">Colocado (clique para mover)</span>
+                        ) : (
+                          <div className="flex flex-col gap-1">
+                            <span className="text-primary">Disponível</span>
+                            <div className="flex gap-1 items-center mt-1">
+                              <input
+                                type="number"
+                                min="1"
+                                max="10"
+                                className="w-12 h-6 text-xs p-1 border border-border rounded bg-background"
+                                value={itemQuantities[item.id] || 1}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || 1;
+                                  setItemQuantities(prev => ({
+                                    ...prev,
+                                    [item.id]: Math.max(1, Math.min(10, val))
+                                  }));
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <button
+                                className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded flex-grow"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddMultipleItems(item.id);
+                                }}
+                              >
+                                Adicionar {itemQuantities[item.id] || 1}x
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

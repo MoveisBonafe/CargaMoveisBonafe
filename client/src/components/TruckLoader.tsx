@@ -5,10 +5,12 @@ import ExportPanel from "./ExportPanel";
 import TruckSelector from "./TruckSelector";
 import FurnitureManager from "./FurnitureManager";
 import AvailableItems from "./AvailableItems";
-// Removendo import não utilizado
+import Controls from "./Controls";
 import { Button } from "./ui/button";
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { useTruckStore } from "../lib/stores/useTruckStore";
+import { useAudio } from "../lib/stores/useAudio";
+import { FurnitureItemPosition } from "../types";
 
 const TruckLoader = () => {
   const [activePanel, setActivePanel] = useState<"config" | "export">("config");
@@ -27,11 +29,29 @@ const TruckLoader = () => {
     resetItems();
   };
 
+  // Estados e funções para o controle de itens
+  const { items, placedItems, getItemById } = useFurnitureStore();
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  
+  // Função para iniciar o arrasto de um item
+  const handleDragStart = (itemId: string) => {
+    console.log(`Iniciando arrasto do item ${itemId}`);
+    setSelectedItem(itemId);
+  };
+
   return (
     <div className="relative flex h-full w-full">
       {/* 3D visualization taking most of the screen */}
       <div className="flex-grow relative">
-        <TruckVisualization />
+        <TruckVisualization selectedItemId={selectedItem} />
+        
+        {/* Painel de controle flutuante (fora do contexto Three.js) */}
+        <Controls 
+          items={items}
+          placedItems={placedItems}
+          onDragStart={handleDragStart}
+          selectedItem={selectedItem}
+        />
       </div>
 
       {/* Sidebar panel */}
@@ -244,8 +264,5 @@ const TruckLoader = () => {
     </div>
   );
 };
-
-import { useAudio } from "../lib/stores/useAudio";
-import { FurnitureItemPosition } from "../types";
 
 export default TruckLoader;
