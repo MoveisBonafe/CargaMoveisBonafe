@@ -6,73 +6,95 @@
 (function() {
   console.log('GitHub Pages path fixer iniciado');
 
-  // Detecta se estamos no GitHub Pages
+  // Detecta se estamos no GitHub Pages ou no ambiente de desenvolvimento
   const isGitHubPages = window.location.hostname.includes('github.io');
+  const hostname = window.location.hostname;
+  
+  // Determina o domínio base para os recursos
+  let baseDomain = '';
+  if (hostname === 'moveisbonafe.github.io') {
+    baseDomain = 'https://moveisbonafe.github.io/CargaMoveisBonafe';
+  } else if (hostname.includes('github.io')) {
+    baseDomain = window.location.origin + '/CargaMoveisBonafe';
+  }
   
   if (isGitHubPages) {
-    console.log('Executando no GitHub Pages, ajustando caminhos');
+    console.log('Executando no GitHub Pages, ajustando caminhos para: ' + baseDomain);
     
-    // Armazena o caminho base original para interceptar requisições de recursos
-    window.originalFetch = window.fetch;
+    // Armazena a implementação original do Audio
+    const originalAudio = window.Audio;
     
-    // Sobrescreve o método fetch para corrigir URLs
-    window.fetch = function(url, options) {
-      let newUrl = url;
-      
-      // Corrige URLs absolutas para recursos como texturas e sons
-      if (typeof url === 'string' && url.startsWith('/')) {
-        newUrl = `/CargaMoveisBonafe${url}`;
-        console.log(`URL corrigida: ${url} -> ${newUrl}`);
+    // Sobrescreve o construtor Audio para corrigir URLs
+    window.Audio = function(src) {
+      if (src && typeof src === 'string') {
+        if (src.startsWith('/')) {
+          // Caminho absoluto, precisa ser corrigido
+          const newSrc = `${baseDomain}${src}`;
+          console.log(`Audio src corrigida: ${src} -> ${newSrc}`);
+          return new originalAudio(newSrc);
+        }
       }
-      
-      return window.originalFetch(newUrl, options);
+      return new originalAudio(src);
     };
     
-    // Corrige o carregamento de imagens e áudios
-    const originalImageSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-    const originalAudioSrc = Object.getOwnPropertyDescriptor(HTMLAudioElement.prototype, 'src');
+    // Preserva o prototype
+    window.Audio.prototype = originalAudio.prototype;
     
-    if (originalImageSrc && originalImageSrc.set) {
-      Object.defineProperty(HTMLImageElement.prototype, 'src', {
-        set: function(url) {
-          if (url.startsWith('/')) {
-            const newUrl = `/CargaMoveisBonafe${url}`;
-            console.log(`Image src corrigida: ${url} -> ${newUrl}`);
-            originalImageSrc.set.call(this, newUrl);
-          } else {
-            originalImageSrc.set.call(this, url);
+    // Sobrescreve THREE.js TextureLoader
+    window.addEventListener('load', function() {
+      if (window.THREE && window.THREE.TextureLoader) {
+        const originalLoad = window.THREE.TextureLoader.prototype.load;
+        
+        window.THREE.TextureLoader.prototype.load = function(url, onLoad, onProgress, onError) {
+          if (url && typeof url === 'string' && url.startsWith('/')) {
+            const newUrl = `${baseDomain}${url}`;
+            console.log(`Texture url corrigida: ${url} -> ${newUrl}`);
+            return originalLoad.call(this, newUrl, onLoad, onProgress, onError);
           }
-        },
-        get: originalImageSrc.get
-      });
-    }
+          return originalLoad.call(this, url, onLoad, onProgress, onError);
+        };
+      }
+    });
     
-    if (originalAudioSrc && originalAudioSrc.set) {
-      Object.defineProperty(HTMLAudioElement.prototype, 'src', {
-        set: function(url) {
-          if (url.startsWith('/')) {
-            const newUrl = `/CargaMoveisBonafe${url}`;
-            console.log(`Audio src corrigida: ${url} -> ${newUrl}`);
-            originalAudioSrc.set.call(this, newUrl);
-          } else {
-            originalAudioSrc.set.call(this, url);
-          }
-        },
-        get: originalAudioSrc.get
-      });
-    }
-    
-    // Expõe uma função global para ajustar URLs
-    window.getGitHubPagesPath = function(path) {
-      if (path.startsWith('/')) {
-        return `/CargaMoveisBonafe${path}`;
+    // Expõe função global para ajustar URLs
+    window.getCorrectPath = function(path) {
+      if (path && typeof path === 'string' && path.startsWith('/')) {
+        return `${baseDomain}${path}`;
       }
       return path;
     };
     
-    // Simula base href para o THREE.js encontrar recursos
+    // Sobrescreve as requisições XMLHttpRequest
+    const originalOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+      let newUrl = url;
+      if (url && typeof url === 'string' && url.startsWith('/')) {
+        newUrl = `${baseDomain}${url}`;
+        console.log(`XHR url corrigida: ${url} -> ${newUrl}`);
+      }
+      return originalOpen.call(this, method, newUrl, async, user, password);
+    };
+    
+    // Sobrescreve fetch para corrigir URLs
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      let newUrl = url;
+      if (url && typeof url === 'string' && url.startsWith('/')) {
+        newUrl = `${baseDomain}${url}`;
+        console.log(`Fetch url corrigida: ${url} -> ${newUrl}`);
+      }
+      return originalFetch(newUrl, options);
+    };
+    
+    // Adicionamos base href para o THREE.js e outros recursos
     const base = document.createElement('base');
-    base.href = '/CargaMoveisBonafe/';
+    base.href = baseDomain + '/';
     document.head.appendChild(base);
+    
+    // Define globalmente o basePath para o aplicativo
+    window.basePath = baseDomain;
+
+    // Informa ao console que os patches foram aplicados
+    console.log('Patches para GitHub Pages aplicados com sucesso!');
   }
 })();
