@@ -1,19 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Script para corrigir caminhos no GitHub Pages -->
-    <script src="./.github-pages-fix.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carga Móveis Bonafé</title>
     <meta name="description" content="Ferramenta de visualização de carregamento de caminhão de móveis com restrições de empilhamento e múltiplos pontos de vista" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    
+    <!-- Texturas pré-carregadas como imagens -->
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/wAALCABAAEABAREA/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMEBQIG/8QALRAAAgEDAwMEAQQCAwAAAAAAAQIDAAQRBRIhMUFRBhMiYRQycYGRFaEjwdH/2gAIAQEAAD8A+qUpSuXdVGWIA+zVdtVtEOGuYxj/AOVwdYsl63kQ/wA1UVlcblgQfIzXdKVS1OC5ks3SzlWOZgQrMMDPY/z0r59YDU9LvpdM1KASQKZEcBcgOv6lyOxxzjsa1NN9a61YqLfU7dbhUON7yFHx58g/zmu9TuJNZ1sO7MLa3JIHx4VerY7k8D+SfFQI7EbVyRnJ7VbtZ2OBn5DI4rS/7plIZdxJPYHAr594i0rX31e/mt5Z7yWeQtKPkWTJ6HHIx2xXrLHWdc0GMwX8ZuFJK+7jDEeeB19iuIdY1vVIzIEitVDYQD5ue3PP+hUCJvWGx+V0hDggZGR0J/8ASKnvL2K0xvJ3McMOprNt9UtOkiyEsccDAPOK2JLm2khZ1LbeOACSfpR1NeO0v01FNmRtcSIjEbVlAIGf9GvT6VHLFpsCTkGTbknGOprQpSlYN9qMVn+nDSnsnj+TVA6neXBPsW6xqf1PIcn+BWnZwqi5kZpZT1dzk/8AnyakureC5iKTRJKh7OoI/wAVCt9Ggt5yNPlktQTuijkwEP2D0+xXdvbyx3RkM7yRnpHu+K/2B/2aupSlczSxxLukdUHliAKxbjWrNUJhb3pOOE6Z/fpVQareyN/4bRicYDSMF/xya7hnv5GPuSRQDttTDH+TVkORXVKUqve2FrfR7J41YdmPVT9HtVSO1vbH/jx7sXaM/wCj4P8As1ZivIHTaXUN2wwqkbw6xJFiRPcjPVl6j9xUiKQSLuA2nvUlKUpSlK4kRJF2uqsPBGa5jgjiBEaKgPXaMUupIbe3aSQEhflhRkn6Hk1Y026kuI3WSNY3Q8YHBB+/+6vpSlKV//Z" id="wood-texture" style="display:none;" alt="Wood Texture" />
+
+    <!-- Script para corrigir caminhos no GitHub Pages -->
+    <script src="./.github-pages-fix.js"></script>
+    
+    <!-- Script de injeção direta de textura -->
+    <script>
+    // Correção direta de textura
+    (function() {
+      window.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM carregado, preparando injeção de textura');
+        
+        // Obter a imagem pré-carregada
+        const woodImg = document.getElementById('wood-texture');
+        if (!woodImg) {
+          console.error('Elemento de textura não encontrado');
+          return;
+        }
+        
+        // Função para monitorar quando THREE estiver disponível
+        function injectTextureDirectly() {
+          if (!window.THREE) {
+            console.log('THREE.js ainda não disponível, aguardando...');
+            setTimeout(injectTextureDirectly, 300);
+            return;
+          }
+          
+          try {
+            // Criar a textura THREE.js
+            const texture = new THREE.Texture();
+            texture.image = woodImg;
+            texture.needsUpdate = true;
+            
+            // Adicionar ao THREE global
+            THREE.woodTexture = texture;
+            
+            // Substituir o método de carregamento do TextureLoader
+            const originalLoad = THREE.TextureLoader.prototype.load;
+            THREE.TextureLoader.prototype.load = function(url, onLoad, onProgress, onError) {
+              if (url === '/textures/wood.jpg') {
+                console.log('Interceptando requisição para /textures/wood.jpg');
+                if (onLoad) setTimeout(() => onLoad(texture), 10);
+                return texture;
+              }
+              return originalLoad.call(this, url, onLoad, onProgress, onError);
+            };
+            
+            // Adicionar ao cache do THREE, se disponível
+            if (THREE.Cache && typeof THREE.Cache.add === 'function') {
+              THREE.Cache.add('/textures/wood.jpg', texture);
+            }
+            
+            console.log('Injeção de textura Three.js bem-sucedida!');
+          } catch (e) {
+            console.error('Erro ao injetar textura:', e);
+          }
+        }
+        
+        // Iniciar a injeção logo após o carregamento do DOM
+        setTimeout(injectTextureDirectly, 100);
+      });
+    })();
+    </script>
+    
     <script type="module" crossorigin src="./assets/index-tQsQ1QqH.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-C9Psxqmb.css">
   </head>
   <body>
     <div id="root"></div>
-      <!-- Script para corrigir texturas -->
+    <!-- Script para corrigir texturas -->
     <script src="./texture-patch.js"></script>
+    <!-- Script de último recurso -->
+    <script src="./direct-patch.js"></script>
   </body>
 </html>

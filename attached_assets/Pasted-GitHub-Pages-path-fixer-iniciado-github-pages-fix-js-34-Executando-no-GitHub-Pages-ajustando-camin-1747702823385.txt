@@ -1,0 +1,79 @@
+GitHub Pages path fixer iniciado
+.github-pages-fix.js:34 Executando no GitHub Pages, ajustando caminhos para: https://moveisbonafe.github.io/CargaMoveisBonafe
+.github-pages-fix.js:42 Uncaught TypeError: Cannot read properties of null (reading 'appendChild')
+    at .github-pages-fix.js:42:21
+    at Array.forEach (<anonymous>)
+    at .github-pages-fix.js:37:36
+    at .github-pages-fix.js:198:3
+(anônimo) @ .github-pages-fix.js:42
+(anônimo) @ .github-pages-fix.js:37
+(anônimo) @ .github-pages-fix.js:198
+texture-patch.js:7 Texture patch iniciado
+texture-patch.js:74 THREE.js ainda não disponível, aguardando...
+index-tQsQ1QqH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-tQsQ1QqH.js:4006 Itens carregados do armazenamento local.
+index-tQsQ1QqH.js:4006 Regras carregadas do armazenamento local.
+index-tQsQ1QqH.js:4006 Tipos de caminhão carregados do armazenamento local
+index-tQsQ1QqH.js:4006 Itens carregados do armazenamento local.
+index-tQsQ1QqH.js:4006 Regras carregadas do armazenamento local.
+wood.jpg:1 
+            
+            
+           GET https://moveisbonafe.github.io/textures/wood.jpg 404 (Not Found)
+Image
+load @ index-tQsQ1QqH.js:3867
+load @ index-tQsQ1QqH.js:3867
+(anônimo) @ index-tQsQ1QqH.js:3909
+(anônimo) @ index-tQsQ1QqH.js:3909
+(anônimo) @ index-tQsQ1QqH.js:3909
+wN @ index-tQsQ1QqH.js:3875
+cG @ index-tQsQ1QqH.js:3875
+_h @ index-tQsQ1QqH.js:3909
+j1 @ index-tQsQ1QqH.js:3946
+h8 @ index-tQsQ1QqH.js:4006
+uy @ index-tQsQ1QqH.js:3895
+GE @ index-tQsQ1QqH.js:3897
+BE @ index-tQsQ1QqH.js:3897
+WD @ index-tQsQ1QqH.js:3897
+Sp @ index-tQsQ1QqH.js:3897
+OE @ index-tQsQ1QqH.js:3897
+N @ index-tQsQ1QqH.js:3883
+G @ index-tQsQ1QqH.js:3883
+index-tQsQ1QqH.js:3909 Error: Could not load /textures/wood.jpg: undefined
+    at index-tQsQ1QqH.js:3909:24610
+    at HTMLImageElement.d (index-tQsQ1QqH.js:3867:171417)
+console.error @ index-tQsQ1QqH.js:3909
+gy @ index-tQsQ1QqH.js:3897
+I.componentDidCatch.v.callback @ index-tQsQ1QqH.js:3897
+bM @ index-tQsQ1QqH.js:3895
+IE @ index-tQsQ1QqH.js:3897
+RE @ index-tQsQ1QqH.js:3897
+BD @ index-tQsQ1QqH.js:3897
+jD @ index-tQsQ1QqH.js:3897
+ka @ index-tQsQ1QqH.js:3897
+OE @ index-tQsQ1QqH.js:3897
+N @ index-tQsQ1QqH.js:3883
+G @ index-tQsQ1QqH.js:3883
+index-tQsQ1QqH.js:3909 Error: Could not load /textures/wood.jpg: undefined
+    at index-tQsQ1QqH.js:3909:24610
+    at HTMLImageElement.d (index-tQsQ1QqH.js:3867:171417)
+console.error @ index-tQsQ1QqH.js:3909
+aS @ index-tQsQ1QqH.js:40
+t.callback @ index-tQsQ1QqH.js:40
+kb @ index-tQsQ1QqH.js:38
+Qb @ index-tQsQ1QqH.js:40
+e2 @ index-tQsQ1QqH.js:40
+dU @ index-tQsQ1QqH.js:40
+gU @ index-tQsQ1QqH.js:40
+Ja @ index-tQsQ1QqH.js:40
+t2 @ index-tQsQ1QqH.js:40
+N @ index-tQsQ1QqH.js:25
+G @ index-tQsQ1QqH.js:25
+index-tQsQ1QqH.js:3909 Uncaught Error: Could not load /textures/wood.jpg: undefined
+    at index-tQsQ1QqH.js:3909:24610
+    at HTMLImageElement.d (index-tQsQ1QqH.js:3867:171417)
+(anônimo) @ index-tQsQ1QqH.js:3909
+d @ index-tQsQ1QqH.js:3867
+texture-patch.js:74 THREE.js ainda não disponível, aguardando...
+index-tQsQ1QqH.js:3867 THREE.WebGLRenderer: Context Lost.
+37texture-patch.js:74 THREE.js ainda não disponível, aguardando...
