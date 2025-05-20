@@ -312,7 +312,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
   
   // Function to handle item drag start
   const handleDragStart = (itemId: string) => {
-    setSelectedItem(itemId);
+    // selectedItemId é controlado pelo componente pai
     const existingPlacement = placedItems.find(item => item.id === itemId);
     
     if (existingPlacement) {
@@ -407,7 +407,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
     if (!itemData) return;
     
     // Verificar se o item já estava colocado (ajuste fino)
-    const itemAlreadyPlaced = placedItems.some(item => item.id === selectedItem);
+    const itemAlreadyPlaced = placedItems.some(item => item.id === selectedItemId);
     
     // Check if position is within truck bounds
     const halfWidth = itemData.width / 2;
@@ -467,7 +467,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
       ) {
         // Check if we can stack this item on top of the other
         const canStack = stackingRules.some(rule => 
-          rule.item1Id === placedItem.id && rule.item2Id === selectedItem
+          rule.item1Id === placedItem.id && rule.item2Id === selectedItemId
         );
         
         if (canStack) {
@@ -571,7 +571,7 @@ const TruckVisualization = ({ selectedItemId }: TruckVisualizationProps) => {
             item={item}
             isPlaced={true}
             onDragStart={() => handleDragStart(item.id)}
-            isSelected={selectedItem === item.id}
+            isSelected={selectedItemId === item.id}
           />
         ))}
         
