@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { FurnitureItemPosition } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -43,6 +44,20 @@ export function getAssetPath(path: string): string {
  */
 export function isDataUrl(url: string): boolean {
   return url.startsWith('data:');
+}
+
+/**
+ * Helper function para verificar colisões entre dois itens
+ */
+export function checkCollision(item1: FurnitureItemPosition, item2: FurnitureItemPosition): boolean {
+  return (
+    item1.position.x - item1.width/2 < item2.position.x + item2.width/2 &&
+    item1.position.x + item1.width/2 > item2.position.x - item2.width/2 &&
+    item1.position.y - item1.height/2 < item2.position.y + item2.height/2 &&
+    item1.position.y + item1.height/2 > item2.position.y - item2.height/2 &&
+    item1.position.z - item1.depth/2 < item2.position.z + item2.depth/2 &&
+    item1.position.z + item1.depth/2 > item2.position.z - item2.depth/2
+  );
 }
 
 export { getLocalStorage, setLocalStorage };

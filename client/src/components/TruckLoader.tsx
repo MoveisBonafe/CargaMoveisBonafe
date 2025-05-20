@@ -5,6 +5,7 @@ import ExportPanel from "./ExportPanel";
 import TruckSelector from "./TruckSelector";
 import FurnitureManager from "./FurnitureManager";
 import AvailableItems from "./AvailableItems";
+// Removendo import não utilizado
 import { Button } from "./ui/button";
 import { useFurnitureStore } from "../lib/stores/useFurnitureStore";
 import { useTruckStore } from "../lib/stores/useTruckStore";
@@ -29,7 +30,7 @@ const TruckLoader = () => {
   return (
     <div className="relative flex h-full w-full">
       {/* 3D visualization taking most of the screen */}
-      <div className="flex-grow">
+      <div className="flex-grow relative">
         <TruckVisualization />
       </div>
 
@@ -61,6 +62,133 @@ const TruckLoader = () => {
           <div className="h-[150px]">
             <AvailableItems />
           </div>
+        </div>
+        
+        {/* Painel de Otimização Automática */}
+        <div className="px-4 py-3 border-b border-border bg-blue-50/30">
+          <h2 className="text-lg font-semibold mb-2 flex items-center">
+            Otimização de Carga
+          </h2>
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <Button 
+              size="sm"
+              onClick={() => {
+                // Distribuir por peso
+                const { placedItems, setPlacedItems, resetPlacedItems } = useFurnitureStore.getState();
+                const { truckDimensions, addWeight, resetWeight } = useTruckStore.getState();
+                const { playSuccess } = useAudio.getState();
+                
+                if (placedItems.length === 0) {
+                  alert("Não há itens para otimizar.");
+                  return;
+                }
+                
+                // Backup, limpar e reordenar
+                const itemsToOptimize = [...placedItems];
+                resetPlacedItems();
+                resetWeight();
+                
+                // Ordenar por peso (do mais pesado para o mais leve)
+                itemsToOptimize.sort((a, b) => b.weight - a.weight);
+                
+                // Dimensões
+                const { width, depth } = truckDimensions;
+                
+                // Reorganizar
+                const newItems: FurnitureItemPosition[] = [];
+                let leftSide = true;
+                
+                itemsToOptimize.forEach((item, index) => {
+                  // Posição baseada no peso
+                  let posX = leftSide ? -width/4 : width/4;
+                  let posZ = index < itemsToOptimize.length * 0.5 ? -depth/3 : 0;
+                  leftSide = !leftSide;
+                  
+                  const newItem = {
+                    ...item,
+                    position: { x: posX, y: item.height/2, z: posZ },
+                    rotation: { x: 0, y: 0, z: 0 }
+                  };
+                  
+                  newItems.push(newItem);
+                  addWeight(item.weight);
+                });
+                
+                setPlacedItems(newItems);
+                playSuccess();
+              }}
+            >
+              Por Peso
+            </Button>
+            
+            <Button 
+              size="sm"
+              onClick={() => {
+                // Distribuir por espaço
+                const { placedItems, setPlacedItems, resetPlacedItems } = useFurnitureStore.getState();
+                const { truckDimensions, addWeight, resetWeight } = useTruckStore.getState();
+                const { playSuccess } = useAudio.getState();
+                
+                if (placedItems.length === 0) {
+                  alert("Não há itens para otimizar.");
+                  return;
+                }
+                
+                // Backup, limpar e reordenar
+                const itemsToOptimize = [...placedItems];
+                resetPlacedItems();
+                resetWeight();
+                
+                // Ordenar por volume
+                itemsToOptimize.sort((a, b) => {
+                  return (b.width * b.height * b.depth) - (a.width * a.height * a.depth);
+                });
+                
+                // Dimensões
+                const { width, depth } = truckDimensions;
+                
+                // Reorganizar em grid
+                const newItems: FurnitureItemPosition[] = [];
+                const cols = 3;
+                
+                itemsToOptimize.forEach((item, index) => {
+                  const row = Math.floor(index / cols);
+                  const col = index % cols;
+                  
+                  const posX = (col - 1) * width/3;
+                  const posZ = row * 0.5 - depth/3;
+                  
+                  const newItem = {
+                    ...item,
+                    position: { x: posX, y: item.height/2, z: posZ },
+                    rotation: { x: 0, y: 0, z: 0 }
+                  };
+                  
+                  newItems.push(newItem);
+                  addWeight(item.weight);
+                });
+                
+                setPlacedItems(newItems);
+                playSuccess();
+              }}
+            >
+              Por Espaço
+            </Button>
+          </div>
+          
+          <Button 
+            size="sm"
+            variant="destructive"
+            className="w-full"
+            onClick={() => {
+              if (window.confirm("Tem certeza que deseja limpar o caminhão? Todos os itens serão removidos.")) {
+                resetTruck();
+                resetItems();
+              }
+            }}
+          >
+            Limpar Caminhão
+          </Button>
         </div>
         
         <div className="flex-grow overflow-auto custom-scrollbar">
@@ -104,5 +232,6 @@ const TruckLoader = () => {
 };
 
 import { useAudio } from "../lib/stores/useAudio";
+import { FurnitureItemPosition } from "../types";
 
 export default TruckLoader;

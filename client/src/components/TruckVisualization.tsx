@@ -111,6 +111,202 @@ const TruckVisualization = () => {
   const [draggedItem, setDraggedItem] = useState<FurnitureItemPosition | null>(null);
   const { playHit, playSuccess } = useAudio.getState();
   
+  // Estado para controlar o tipo de distribuição automática
+  const [optimizationType, setOptimizationType] = useState<'none' | 'weight' | 'space'>('none');
+  
+  // Função para resetar a configuração
+  const resetConfiguration = () => {
+    // Remover o item atualmente arrastado, se houver
+    setDraggedItem(null);
+    
+    // Remover todos os itens do caminhão
+    placedItems.forEach(item => {
+      removeWeight(item.weight);
+    });
+    
+    // Limpar a lista de itens colocados
+    resetPlacedItems();
+    resetWeight();
+    
+    console.log("Configuração resetada. Todos os itens removidos do caminhão.");
+  };
+  
+  // Função para otimizar a distribuição de carga com base no peso
+  const optimizeByWeight = () => {
+    if (placedItems.length === 0) {
+      alert("Não há itens para otimizar.");
+      return;
+    }
+    
+    // Remover todos os itens atuais para reorganizá-los
+    const itemsToOptimize = [...placedItems];
+    resetPlacedItems();
+    resetWeight();
+    
+    // Ordenar itens por peso (do mais pesado para o mais leve)
+    itemsToOptimize.sort((a, b) => b.weight - a.weight);
+    
+    // Dimensões do caminhão para cálculos
+    const { width: truckWidth, depth: truckDepth } = truckDimensions;
+    
+    // Definir grid para posicionamento dos itens
+    const gridX = truckWidth / 3; // Divide caminhão em 3 seções horizontais
+    const gridZ = truckDepth / 3; // Divide caminhão em 3 seções de profundidade
+    
+    // Distribuir itens para balancear o peso
+    // Mais pesados nas bordas de trás, mais leves no centro e frente
+    const newPlacements: FurnitureItemPosition[] = [];
+    let leftHeavy = true; // Alternar entre esquerda e direita para balanço
+    
+    itemsToOptimize.forEach((item, index) => {
+      // Calcular posição com base no índice e peso
+      let posX, posZ;
+      
+      if (index % 3 === 0) { // Itens mais pesados (começando do índice 0, 3, 6...)
+        posX = leftHeavy ? -truckWidth/4 : truckWidth/4; // Alternar entre lados
+        posZ = -truckDepth/3; // Parte traseira do caminhão
+        leftHeavy = !leftHeavy; // Inverter para o próximo item pesado
+      } else if (index % 3 === 1) { // Itens de peso médio
+        posX = leftHeavy ? truckWidth/5 : -truckWidth/5;
+        posZ = 0; // Centro do caminhão
+      } else { // Itens mais leves
+        posX = leftHeavy ? -truckWidth/6 : truckWidth/6;
+        posZ = truckDepth/3; // Parte frontal do caminhão
+      }
+      
+      // Calcular posição Y (altura) para empilhamento
+      // Verificar se há algo abaixo para empilhar
+      let posY = item.height / 2; // Começa no chão
+      let canStack = false;
+      
+      for (const placedItem of newPlacements) {
+        // Verificar se este item pode ser colocado em cima de outro
+        if (Math.abs(placedItem.position.x - posX) < 0.5 && 
+            Math.abs(placedItem.position.z - posZ) < 0.5) {
+          
+          // Verificar se as dimensões são compatíveis
+          if (item.width <= placedItem.width && item.depth <= placedItem.depth) {
+            posY = placedItem.position.y + placedItem.height/2 + item.height/2;
+            canStack = true;
+            break;
+          }
+        }
+      }
+      
+      // Adicionar item na nova posição
+      const newPlacement: FurnitureItemPosition = {
+        ...item,
+        position: { x: posX, y: posY, z: posZ },
+        rotation: { x: 0, y: 0, z: 0 } // Reset rotação para simplificar
+      };
+      
+      newPlacements.push(newPlacement);
+      addWeight(item.weight);
+    });
+    
+    // Atualizar a lista de itens colocados
+    setPlacedItems(newPlacements);
+    playSuccess();
+  };
+  
+  // Função para otimizar a distribuição de carga com base no espaço
+  const optimizeBySpace = () => {
+    if (placedItems.length === 0) {
+      alert("Não há itens para otimizar.");
+      return;
+    }
+    
+    // Remover todos os itens atuais para reorganizá-los
+    const itemsToOptimize = [...placedItems];
+    resetPlacedItems();
+    resetWeight();
+    
+    // Ordenar itens por volume (do maior para o menor)
+    itemsToOptimize.sort((a, b) => {
+      const volumeA = a.width * a.height * a.depth;
+      const volumeB = b.width * b.height * b.depth;
+      return volumeB - volumeA;
+    });
+    
+    // Dimensões do caminhão
+    const { width: truckWidth, height: truckHeight, depth: truckDepth } = truckDimensions;
+    
+    // Algoritmo de "Best Fit Decreasing" para otimização de espaço
+    const newPlacements: FurnitureItemPosition[] = [];
+    
+    // Criar grid 3D para posicionamento
+    const gridSizeX = 0.5; // Incremento de 0.5m no eixo X
+    const gridSizeZ = 0.5; // Incremento de 0.5m no eixo Z
+    
+    // Função para verificar se um item pode ser colocado em uma posição
+    const canPlaceItem = (item: FurnitureItemPosition, x: number, y: number, z: number): boolean => {
+      // Verificar limites do caminhão
+      if (x - item.width/2 < -truckWidth/2 || x + item.width/2 > truckWidth/2 ||
+          y - item.height/2 < 0 || y + item.height/2 > truckHeight ||
+          z - item.depth/2 < -truckDepth/2 || z + item.depth/2 > truckDepth/2) {
+        return false;
+      }
+      
+      // Verificar colisões com outros itens
+      const testItem = {
+        ...item,
+        position: { x, y, z },
+        rotation: { x: 0, y: 0, z: 0 }
+      };
+      
+      for (const placedItem of newPlacements) {
+        if (checkCollision(testItem, placedItem)) {
+          return false;
+        }
+      }
+      
+      return true;
+    };
+    
+    // Colocar cada item no local mais baixo possível
+    itemsToOptimize.forEach(item => {
+      let bestX = 0, bestY = 0, bestZ = 0;
+      let bestY_value = truckHeight; // Começar do topo para encontrar a posição mais baixa
+      
+      // Tentar todas as posições possíveis da grade
+      for (let z = -truckDepth/2 + item.depth/2; z <= truckDepth/2 - item.depth/2; z += gridSizeZ) {
+        for (let x = -truckWidth/2 + item.width/2; x <= truckWidth/2 - item.width/2; x += gridSizeX) {
+          // Começar do chão e subir até encontrar uma posição válida
+          for (let y = item.height/2; y <= truckHeight - item.height/2; y += 0.1) {
+            if (canPlaceItem(item, x, y, z)) {
+              // Se esta posição é mais baixa que a melhor encontrada, atualizar
+              if (y < bestY_value) {
+                bestX = x;
+                bestY = y;
+                bestZ = z;
+                bestY_value = y;
+                break; // Encontrou a posição mais baixa para este x,z
+              }
+            }
+          }
+        }
+      }
+      
+      // Se encontrou uma posição válida
+      if (bestY_value < truckHeight) {
+        const newPlacement: FurnitureItemPosition = {
+          ...item,
+          position: { x: bestX, y: bestY, z: bestZ },
+          rotation: { x: 0, y: 0, z: 0 }
+        };
+        
+        newPlacements.push(newPlacement);
+        addWeight(item.weight);
+      } else {
+        console.warn(`Não foi possível encontrar posição para o item ${item.name}`);
+      }
+    });
+    
+    // Atualizar a lista de itens colocados
+    setPlacedItems(newPlacements);
+    playSuccess();
+  };
+  
   // Function to handle item drag start
   const handleDragStart = (itemId: string) => {
     setSelectedItem(itemId);
@@ -147,7 +343,7 @@ const TruckVisualization = () => {
   const [keyboardControlsActive, setKeyboardControlsActive] = useState(false);
   
   // Estado para controlar a distribuição automática
-  const [autoDistribute, setAutoDistribute] = useState(true);
+  // (Este estado foi removido e substituído por optimizationType)
   
   // Função para alternar modo de rotação
   const toggleRotationMode = () => {
@@ -237,27 +433,8 @@ const TruckVisualization = () => {
     // Find floor level (may be on top of another item)
     let y = itemData.height / 2; // Start with item on the ground
     
-    // Se a distribuição automática está ativada e item não já estava colocado
+    // Posição final do item
     let finalPosition = { x, y, z };
-    
-    if (autoDistribute && !itemAlreadyPlaced) {
-      // Criar um objeto temporário para passar para a função findOptimalPosition
-      const tempItem: FurnitureItemPosition = {
-        ...itemData,
-        position: { x: 0, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 }
-      };
-      
-      // Encontrar posição ótima e usar suas coordenadas
-      const optimalPos = findOptimalPosition(tempItem);
-      finalPosition = { 
-        x: optimalPos.x, 
-        y: optimalPos.y, 
-        z: optimalPos.z 
-      };
-      
-      console.log("Posicionando automaticamente em:", finalPosition);
-    }
     
     const newPlacement: FurnitureItemPosition = {
       ...itemData,
@@ -406,6 +583,42 @@ const TruckVisualization = () => {
             onPlacement={handlePlacement}
           />
         )}
+        
+        {/* Controles de otimização automática */}
+        <div className="absolute top-4 right-4 bg-background p-3 rounded-lg border shadow-md">
+          <h3 className="text-sm font-medium mb-2">Ajuste Automático</h3>
+          <div className="space-y-2">
+            <button 
+              className="w-full px-3 py-2 text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+              onClick={() => {
+                // Implementar otimização por peso
+                optimizeByWeight();
+              }}
+            >
+              Distribuir por Peso
+            </button>
+            <button 
+              className="w-full px-3 py-2 text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+              onClick={() => {
+                // Implementar otimização por espaço
+                optimizeBySpace();
+              }}
+            >
+              Distribuir por Espaço
+            </button>
+            <button 
+              className="w-full px-3 py-2 text-xs bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-md"
+              onClick={() => {
+                // Resetar configuração
+                if (window.confirm("Tem certeza que deseja resetar a configuração? Todos os itens serão removidos do caminhão.")) {
+                  resetConfiguration();
+                }
+              }}
+            >
+              Resetar Caminhão
+            </button>
+          </div>
+        </div>
         
         {/* Controls panel for item selection */}
         <ControlsPanel 
