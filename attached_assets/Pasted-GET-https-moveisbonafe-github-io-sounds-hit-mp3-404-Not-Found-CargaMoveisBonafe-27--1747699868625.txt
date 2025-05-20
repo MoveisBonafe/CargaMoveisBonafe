@@ -1,0 +1,68 @@
+GET https://moveisbonafe.github.io/sounds/hit.mp3 404 (Not Found)
+CargaMoveisBonafe/:27 
+            
+            
+           GET https://moveisbonafe.github.io/sounds/success.mp3 net::ERR_ABORTED 404 (Not Found)
+CargaMoveisBonafe/:27 
+            
+            
+           GET https://moveisbonafe.github.io/sounds/background.mp3 net::ERR_ABORTED 404 (Not Found)
+wood.jpg:1 
+            
+            
+           GET https://moveisbonafe.github.io/textures/wood.jpg 404 (Not Found)
+Image
+load @ index-D5YMg0rb.js:3867
+load @ index-D5YMg0rb.js:3867
+(anônimo) @ index-D5YMg0rb.js:3909
+(anônimo) @ index-D5YMg0rb.js:3909
+(anônimo) @ index-D5YMg0rb.js:3909
+C2 @ index-D5YMg0rb.js:3875
+l5 @ index-D5YMg0rb.js:3875
+kf @ index-D5YMg0rb.js:3909
+A1 @ index-D5YMg0rb.js:3946
+fG @ index-D5YMg0rb.js:4006
+d0 @ index-D5YMg0rb.js:3895
+pM @ index-D5YMg0rb.js:3897
+uM @ index-D5YMg0rb.js:3897
+HL @ index-D5YMg0rb.js:3897
+kh @ index-D5YMg0rb.js:3897
+sM @ index-D5YMg0rb.js:3897
+I @ index-D5YMg0rb.js:3883
+W @ index-D5YMg0rb.js:3883
+index-D5YMg0rb.js:3909 Error: Could not load /textures/wood.jpg: undefined
+    at index-D5YMg0rb.js:3909:24612
+    at HTMLImageElement.d (index-D5YMg0rb.js:3867:171266)
+console.error @ index-D5YMg0rb.js:3909
+v0 @ index-D5YMg0rb.js:3897
+Aw.R.componentDidCatch.v.callback @ index-D5YMg0rb.js:3897
+Z1 @ index-D5YMg0rb.js:3895
+tM @ index-D5YMg0rb.js:3897
+eM @ index-D5YMg0rb.js:3897
+zL @ index-D5YMg0rb.js:3897
+WL @ index-D5YMg0rb.js:3897
+va @ index-D5YMg0rb.js:3897
+sM @ index-D5YMg0rb.js:3897
+I @ index-D5YMg0rb.js:3883
+W @ index-D5YMg0rb.js:3883
+index-D5YMg0rb.js:3909 Error: Could not load /textures/wood.jpg: undefined
+    at index-D5YMg0rb.js:3909:24612
+    at HTMLImageElement.d (index-D5YMg0rb.js:3867:171266)
+console.error @ index-D5YMg0rb.js:3909
+$x @ index-D5YMg0rb.js:40
+t.callback @ index-D5YMg0rb.js:40
+oE @ index-D5YMg0rb.js:38
+wE @ index-D5YMg0rb.js:40
+oR @ index-D5YMg0rb.js:40
+uD @ index-D5YMg0rb.js:40
+mD @ index-D5YMg0rb.js:40
+Da @ index-D5YMg0rb.js:40
+aR @ index-D5YMg0rb.js:40
+I @ index-D5YMg0rb.js:25
+W @ index-D5YMg0rb.js:25
+index-D5YMg0rb.js:3909 Uncaught Error: Could not load /textures/wood.jpg: undefined
+    at index-D5YMg0rb.js:3909:24612
+    at HTMLImageElement.d (index-D5YMg0rb.js:3867:171266)
+(anônimo) @ index-D5YMg0rb.js:3909
+d @ index-D5YMg0rb.js:3867
+index-D5YMg0rb.js:3867 THREE.WebGLRenderer: Context Lost.

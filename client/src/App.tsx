@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { useAudio } from "./lib/stores/useAudio";
+import { getAssetPath } from "./lib/utils";
 import "@fontsource/inter";
 import TruckLoader from "./components/TruckLoader";
 import { Controls as ControlsType } from "./types";
@@ -22,17 +23,6 @@ function App() {
   // Set up audio elements
   useEffect(() => {
     const { setBackgroundMusic, setHitSound, setSuccessSound } = useAudio.getState();
-    
-    // Use a função que determina o caminho base correto para os recursos
-    const getAssetPath = (path: string) => {
-      // Se window.basePath existir (definido no index.html), use-o
-      const basePath = (window as any).basePath || '/';
-      // Remove a barra inicial se o basePath já terminar com uma barra
-      if (path.startsWith('/') && basePath.endsWith('/')) {
-        path = path.substring(1);
-      }
-      return `${basePath}${path}`;
-    };
     
     const backgroundMusic = new Audio(getAssetPath("sounds/background.mp3"));
     backgroundMusic.loop = true;
