@@ -34,12 +34,16 @@
     console.log('Executando no GitHub Pages, ajustando caminhos para: ' + baseDomain);
     
     // PATCH 1: Adicionar texturas como imagens no DOM para pré-carregar
-    Object.keys(textureBase64Data).forEach(key => {
-      const img = new Image();
-      img.src = textureBase64Data[key];
-      img.style.display = 'none';
-      img.id = 'preloaded-' + key.replace(/[\/\.]/g, '-');
-      document.body.appendChild(img);
+    // Aguardar o DOM estar completamente carregado
+    window.addEventListener('DOMContentLoaded', function() {
+      Object.keys(textureBase64Data).forEach(key => {
+        const img = new Image();
+        img.src = textureBase64Data[key];
+        img.style.display = 'none';
+        img.id = 'preloaded-' + key.replace(/[\/\.]/g, '-');
+        document.body.appendChild(img);
+      });
+      console.log('Texturas base64 pré-carregadas com sucesso');
     });
     
     // PATCH 2: Sobrescreve construções de URLs
