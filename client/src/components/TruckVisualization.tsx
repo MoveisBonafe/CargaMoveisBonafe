@@ -31,7 +31,18 @@ const checkCollision = (item1: FurnitureItemPosition, item2: FurnitureItemPositi
 
 // Truck component for visualizing the truck box
 const Truck = () => {
-  const woodTexture = useTexture("/textures/wood.jpg");
+  // Obtém o caminho base correto para os recursos
+  const getAssetPath = (path: string) => {
+    // Se window.basePath existir (definido no index.html), use-o
+    const basePath = (window as any).basePath || '/';
+    // Remove a barra inicial se o basePath já terminar com uma barra
+    if (path.startsWith('/') && basePath.endsWith('/')) {
+      path = path.substring(1);
+    }
+    return `${basePath}${path}`;
+  };
+  
+  const woodTexture = useTexture(getAssetPath("textures/wood.jpg"));
   woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping;
   woodTexture.repeat.set(5, 5);
   
