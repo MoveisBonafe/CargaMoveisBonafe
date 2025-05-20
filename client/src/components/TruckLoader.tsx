@@ -12,6 +12,13 @@ const TruckLoader = () => {
   const [activePanel, setActivePanel] = useState<"config" | "export">("config");
   const resetTruck = useTruckStore(state => state.resetTruck);
   const { resetItems } = useFurnitureStore();
+  
+  // Carregar dados salvos quando o componente é montado
+  useEffect(() => {
+    // Carregar tipos de caminhão e móveis do localStorage
+    useTruckStore.getState().loadTrucksFromLocalStorage();
+    useFurnitureStore.getState().loadItemsFromLocalStorage();
+  }, []);
 
   const handleReset = () => {
     resetTruck();
@@ -47,7 +54,25 @@ const TruckLoader = () => {
         
         <div className="flex-grow overflow-auto custom-scrollbar">
           {activePanel === "config" ? (
-            <ConfigPanel />
+            <div className="space-y-6 p-4">
+              {/* Seleção de Caminhão */}
+              <div className="border-b pb-4">
+                <h2 className="text-xl font-semibold mb-3">Tipo de Caminhão</h2>
+                <TruckSelector />
+              </div>
+              
+              {/* Gerenciamento de Móveis */}
+              <div className="border-b pb-4">
+                <h2 className="text-xl font-semibold mb-3">Gerenciamento de Móveis</h2>
+                <FurnitureManager />
+              </div>
+              
+              {/* Painel de Configuração Original */}
+              <div>
+                <h2 className="text-xl font-semibold mb-3">Configurações Avançadas</h2>
+                <ConfigPanel />
+              </div>
+            </div>
           ) : (
             <ExportPanel />
           )}
