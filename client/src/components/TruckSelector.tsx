@@ -90,22 +90,46 @@ const TruckSelector = () => {
       id: newTruck.id || uuidv4().substring(0, 8)
     };
     
-    addTruckType(truckToAdd);
-    resetNewTruckForm();
+    try {
+      addTruckType(truckToAdd);
+      // Forçar o salvamento para o localStorage imediatamente
+      setTimeout(() => saveTrucksToLocalStorage(), 100);
+      console.log("Caminhão adicionado e dados salvos:", truckToAdd);
+      resetNewTruckForm();
+    } catch (error) {
+      console.error("Erro ao adicionar caminhão:", error);
+      alert("Erro ao adicionar caminhão. Verifique o console para mais detalhes.");
+    }
   };
   
   // Atualizar um caminhão existente
   const handleUpdateTruck = () => {
     if (!editingTruck) return;
     
-    updateTruckType(editingTruck.id, editingTruck);
-    setEditingTruck(null);
+    try {
+      updateTruckType(editingTruck.id, editingTruck);
+      // Forçar o salvamento para o localStorage imediatamente
+      setTimeout(() => saveTrucksToLocalStorage(), 100);
+      console.log("Caminhão atualizado e dados salvos:", editingTruck);
+      setEditingTruck(null);
+    } catch (error) {
+      console.error("Erro ao atualizar caminhão:", error);
+      alert("Erro ao atualizar caminhão. Verifique o console para mais detalhes.");
+    }
   };
   
   // Excluir um caminhão
   const handleRemoveTruck = (id: string) => {
     if (window.confirm("Tem certeza que deseja excluir este caminhão?")) {
-      removeTruckType(id);
+      try {
+        removeTruckType(id);
+        // Forçar o salvamento para o localStorage imediatamente
+        setTimeout(() => saveTrucksToLocalStorage(), 100);
+        console.log("Caminhão removido e dados salvos. ID:", id);
+      } catch (error) {
+        console.error("Erro ao remover caminhão:", error);
+        alert("Erro ao remover caminhão. Verifique o console para mais detalhes.");
+      }
     }
   };
   

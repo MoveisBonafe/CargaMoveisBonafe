@@ -98,8 +98,16 @@ const FurnitureManager = () => {
       id: uuidv4().substring(0, 8)
     };
     
-    addItem(itemToAdd);
-    resetNewItemForm();
+    try {
+      addItem(itemToAdd);
+      // Forçar o salvamento para o localStorage imediatamente
+      setTimeout(() => saveItemsToLocalStorage(), 100);
+      console.log("Móvel adicionado e dados salvos:", itemToAdd);
+      resetNewItemForm();
+    } catch (error) {
+      console.error("Erro ao adicionar móvel:", error);
+      alert("Erro ao adicionar móvel. Verifique o console para mais detalhes.");
+    }
   };
   
   // Atualizar um móvel existente
@@ -116,14 +124,30 @@ const FurnitureManager = () => {
       return;
     }
     
-    updateItem(editingItem.id, editingItem);
-    setEditingItem(null);
+    try {
+      updateItem(editingItem.id, editingItem);
+      // Forçar o salvamento para o localStorage imediatamente
+      setTimeout(() => saveItemsToLocalStorage(), 100);
+      console.log("Móvel atualizado e dados salvos:", editingItem);
+      setEditingItem(null);
+    } catch (error) {
+      console.error("Erro ao atualizar móvel:", error);
+      alert("Erro ao atualizar móvel. Verifique o console para mais detalhes.");
+    }
   };
   
   // Excluir um móvel
   const handleRemoveItem = (id: string) => {
     if (window.confirm("Tem certeza que deseja excluir este móvel?")) {
-      removeItem(id);
+      try {
+        removeItem(id);
+        // Forçar o salvamento para o localStorage imediatamente
+        setTimeout(() => saveItemsToLocalStorage(), 100);
+        console.log("Móvel removido e dados salvos. ID:", id);
+      } catch (error) {
+        console.error("Erro ao remover móvel:", error);
+        alert("Erro ao remover móvel. Verifique o console para mais detalhes.");
+      }
     }
   };
   
